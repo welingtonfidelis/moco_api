@@ -30,8 +30,8 @@ class CashRegisterGroupService {
         return updatedCashRegisterGroup;
     }
 
-    async delete(id: number) {
-        const deletedCashRegisterGroup = await cashRegisterGroupRepository.delete(id);
+    async delete(id: number, ongId: number) {
+        const deletedCashRegisterGroup = await cashRegisterGroupRepository.delete(id, ongId);
         
         return deletedCashRegisterGroup;
     }

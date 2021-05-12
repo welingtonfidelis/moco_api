@@ -1,6 +1,8 @@
+import dotenv from 'dotenv';
 import express from 'express';
 
-import './database/connection';
+dotenv.config();
+
 import { router } from './routes';
 
 const app = express();

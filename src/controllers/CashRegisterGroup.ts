@@ -80,8 +80,9 @@ class CashRegisterGroupController {
     async delete(req: Request, res: Response) {
         try {
             const { id } = req.params;
+            const { ongId } = req;
 
-            const deletedCashRegisterGroup = await cashRegisterGroupService.delete(parseInt(id));
+            const deletedCashRegisterGroup = await cashRegisterGroupService.delete(parseInt(id), ongId);
             const responseHandled = responseClientService.successResponse(deletedCashRegisterGroup);
 
             return res.json(responseHandled);

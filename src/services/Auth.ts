@@ -28,11 +28,10 @@ class AuthService {
             )
         }
 
-        const token = jwt.sign(
-            { userId: selectedUser.id, ongId: selectedUser.OngId, userIsAdmin: selectedUser.isAdm }, 
-            jwtSecret, 
-            { expiresIn: '10h' }
-        );
+        const contentToken: TokenInterface = { 
+            userId: selectedUser.id!, ongId: selectedUser.OngId, userIsAdmin: selectedUser.isAdm 
+        }
+        const token = jwt.sign(contentToken, jwtSecret, { expiresIn: '10h' });
 
         const logedUser: UserLoginInterface = {
             email: selectedUser.email,

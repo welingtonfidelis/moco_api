@@ -9,10 +9,10 @@ const authMidleware = (req: Request, res: Response, next: NextFunction) => {
     const jwtSecret = process.env.SECRET!;
     const { authorization } = req.headers;
 
-    if(!authorization) {
+    if (!authorization) {
         const errorHandled = responseClientService.successResponse(
-            {}, 
-            401, 
+            {},
+            401,
             'Authorization is required'
         );
 
@@ -20,7 +20,20 @@ const authMidleware = (req: Request, res: Response, next: NextFunction) => {
     }
 
     const token = authorization.replace('Bearer', '').trim();
-    const verifiedToken = jwt.verify(token, jwtSecret);
+
+    let verifiedToken = {}
+
+    try {
+        verifiedToken = jwt.verify(token, jwtSecret);
+    } catch (error) {
+        const errorHandled = responseClientService.successResponse(
+            {},
+            401,
+            error.message || 'Failed in authentication'
+        );
+
+        return res.status(401).json(errorHandled);
+    }
 
     Object.assign(req, verifiedToken as TokenInterface);
 
