@@ -9,7 +9,7 @@ const cashRegisterGroupService = new CashRegisterGroupService;
 class CashRegisterGroupController {
     async save(req: Request, res: Response) {
         try {
-            const { description, observation = '' } = req.body;
+            const { description, observation } = req.body;
             const { ongId } = req;
             const data: CashRegisterGroupInterface = {
                 ong_id: ongId,
