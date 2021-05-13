@@ -1,8 +1,8 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { UserLoginInterface } from '../entities/User';
 import { AppError } from '../errors/AppError';
-import { TokenInterface } from '../models/Token';
-import { UserLoginInterface } from '../models/User';
+import { TokenInterface } from '../entities/Token';
 import { UserRepository } from '../repository/User';
 
 const userRepository = new UserRepository();
@@ -29,7 +29,7 @@ class AuthService {
         }
 
         const contentToken: TokenInterface = { 
-            userId: selectedUser.id!, ongId: selectedUser.ong_id
+            userId: selectedUser.id, ongId: selectedUser.ong_id
         }
         const token = jwt.sign(contentToken, jwtSecret, { expiresIn: '10h' });
 

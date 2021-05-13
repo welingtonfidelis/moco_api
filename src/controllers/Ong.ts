@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { OngInterface } from "../models/Ong";
+import { OngInterface } from "../entities/Ong";
 import { OngService } from "../services/Ong";
 import { ResponseClientService } from "../services/ResponseClient";
 

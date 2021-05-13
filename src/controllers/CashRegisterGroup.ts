@@ -9,11 +9,12 @@ const cashRegisterGroupService = new CashRegisterGroupService;
 class CashRegisterGroupController {
     async save(req: Request, res: Response) {
         try {
-            const { name } = req.body;
+            const { description, observation = '' } = req.body;
             const { ongId } = req;
             const data: CashRegisterGroupInterface = {
-                OngId: ongId,
-                name 
+                ong_id: ongId,
+                description,
+                observation
             }
 
             const savedCashRegisterGroup = await cashRegisterGroupService.save(data)
@@ -47,7 +48,7 @@ class CashRegisterGroupController {
             const { id } = req.params;
             const { ongId } = req;
 
-            const selectedCashRegisterGroup = await cashRegisterGroupService.show(parseInt(id), ongId);
+            const selectedCashRegisterGroup = await cashRegisterGroupService.show(id, ongId);
             const responseHandled = responseClientService.successResponse(selectedCashRegisterGroup);
 
             return res.json(responseHandled);
@@ -59,15 +60,16 @@ class CashRegisterGroupController {
 
     async update(req: Request, res: Response) {
         try {
-            const { name } = req.body;
+            const { description, observation } = req.body;
             const { id } = req.params;
             const { ongId } = req;
             const data: CashRegisterGroupInterface = {
-                OngId: ongId,
-                name 
+                ong_id: ongId,
+                description, 
+                observation
             }
 
-            const updatedCashRegisterGroup = await cashRegisterGroupService.update(parseInt(id), data);
+            const updatedCashRegisterGroup = await cashRegisterGroupService.update(id, ongId, data);
             const responseHandled = responseClientService.successResponse(updatedCashRegisterGroup);
 
             return res.json(responseHandled);
@@ -82,7 +84,7 @@ class CashRegisterGroupController {
             const { id } = req.params;
             const { ongId } = req;
 
-            const deletedCashRegisterGroup = await cashRegisterGroupService.delete(parseInt(id), ongId);
+            const deletedCashRegisterGroup = await cashRegisterGroupService.delete(id, ongId);
             const responseHandled = responseClientService.successResponse(deletedCashRegisterGroup);
 
             return res.json(responseHandled);

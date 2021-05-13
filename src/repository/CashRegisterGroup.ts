@@ -1,61 +1,50 @@
-import { CashRegisterGroupInterface } from "../entities/CashRegisterGroup";
+import { CashRegisterGroupCreatedInterface, CashRegisterGroupInterface } from "../entities/CashRegisterGroup";
+import { CashRegisterGroupModel } from "../models/CashRegisterGroup";
 
 class CashRegisterGroupRepository {
     async save(data: CashRegisterGroupInterface) {
-        // const repository = getRepository<CashRegisterGroupInterface>(CashRegisterGroupModel);
+        const savedCashRegisterGroup = await CashRegisterGroupModel.create(data);
+        const savedUserHandled: CashRegisterGroupCreatedInterface = {
+            id: savedCashRegisterGroup.id
+        }
 
-        // const savedCashRegisterGroup = await repository.save(data);
-
-        return 'savedCashRegisterGroup';
+        return savedUserHandled;
     }
 
-    async list(page: number, limit: number, OngId: number) {
-        // const repository = getRepository<CashRegisterGroupInterface[]>(CashRegisterGroupModel);
+    async list(page: number, limit: number, ongId: string) {
+        const listCashRegisterGroups = await CashRegisterGroupModel.findAll({
+            where: { ong_id: ongId },
+            offset: page,
+            limit
+        });
 
-        // const listCashRegisterGroups = await repository.find({
-        //     where: { OngId },
-        //     skip: page,
-        //     take: limit
-        // });
-
-        return 'listCashRegisterGroups';
+        return listCashRegisterGroups;
     }
 
-    async show(id: number, OngId: number) {
-        // const repository = getRepository<CashRegisterGroupInterface>(CashRegisterGroupModel);
+    async show(id: string, ongId: string) {
+        const selectedCashRegisterGroup = await CashRegisterGroupModel.findOne({
+            where: { id, ong_id: ongId }
+        });
 
-        // const selectedCashRegisterGroup = await repository.findOne({
-        //     where: { id, OngId }
-        // });
-
-        return 'selectedCashRegisterGroup' || {};
+        return selectedCashRegisterGroup;
     }
 
-    async update(id: number, data: CashRegisterGroupInterface) {
-        // const repository = getRepository<CashRegisterGroupInterface>(CashRegisterGroupModel);
+    async update(id: string, ongId: string, data: CashRegisterGroupInterface) {
+        const updatedCashRegisterGroup = await CashRegisterGroupModel.update(
+            data,
+            {
+                where: { id, ong_id: ongId}
+            });
 
-        // const updatedCashRegisterGroup = await repository.update(id, data);
-
-        return 'updatedCashRegisterGroup';
+        return updatedCashRegisterGroup;
     }
 
-    async delete(id: number, OngId: number) {
-        // const repository = getRepository<CashRegisterGroupInterface>(CashRegisterGroupModel);
+    async delete(id: string, ongId: string) {
+        const deletedCashRegisterGroup = await CashRegisterGroupModel.destroy({
+            where: { id, ong_id: ongId }
+        });
 
-        // const selectedCashRegisterGroup = await repository.findOne({
-        //     where: {
-        //         id, OngId, deletedAt: IsNull()
-        //     }
-        // });
-
-        // const deletedCashRegisterGroup = await repository.softDelete(id);
-        // if (selectedCashRegisterGroup) {
-        //     await repository.save({
-        //         ...selectedCashRegisterGroup, deletedAt: new Date()
-        //     });
-        // }
-
-        return {};
+        return deletedCashRegisterGroup;
     }
 }
 

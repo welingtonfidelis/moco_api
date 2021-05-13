@@ -1,8 +1,7 @@
 import { Request, Response } from "express"
-import { OngInterface } from "../models/Ong";
-import { UserInterface } from "../models/User";
 import { UserService } from "../services/User";
 import { ResponseClientService } from "../services/ResponseClient";
+import { UserInterface } from "../entities/User";
 
 const responseClientService = new ResponseClientService();
 const userService = new UserService();

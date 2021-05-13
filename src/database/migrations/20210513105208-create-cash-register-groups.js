@@ -2,39 +2,18 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('users', {
+    return queryInterface.createTable('cash_register_groups', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
         allowNull: false,
         primaryKey: true
       },
-      name: {
+      description: {
         allowNull: false,
         type: Sequelize.STRING
       },
-      email: {
-        allowNull: false,
-        type: Sequelize.STRING,
-        unique: true
-      },
-      phone: {
-        type: Sequelize.STRING
-      },
-      user: {
-        allowNull: false,
-        type: Sequelize.STRING,
-        unique: true
-      },
-      password: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
-      birth: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      address: {
+      observation: {
         type: Sequelize.STRING,
       },
       ong_id: {
@@ -59,13 +38,21 @@ module.exports = {
       deleted_at: {
         type: Sequelize.DATE
       }
+    },
+    {
+      uniqueKeys: {
+        actions_unique: {
+          fields: ['description', 'ong_id']
+        }
+
+      }
     })
     .then(() => {
-      queryInterface.addIndex('users', ['user', 'email'])
+      queryInterface.addIndex('cash_register_groups', ['description'])
     })
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('users');
+    return queryInterface.dropTable('cash_register_groups');
   }
 };

@@ -10,7 +10,7 @@ const router = Router();
 
 router.use(authRouter);
 
-// router.use(authMidleware);
+router.use(authMidleware);
 
 router.use(cashRegisterRouter);
 router.use(cashRegisterGroupRouter);

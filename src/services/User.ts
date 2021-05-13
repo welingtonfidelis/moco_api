@@ -1,4 +1,4 @@
-import { UserInterface } from "../models/User";
+import { UserInterface } from "../entities/User";
 import { UserRepository } from "../repository/User";
 
 const userRepository = new UserRepository();

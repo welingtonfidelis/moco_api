@@ -10,7 +10,7 @@ class CashRegisterGroupService {
         return savedCashRegisterGroup;
     }
 
-    async list(page: number, limit: number, ongId: number) {
+    async list(page: number, limit: number, ongId: string) {
         const skip = limit * (page - 1);
 
         const listCashRegisterGroups = await cashRegisterGroupRepository.list(skip, limit, ongId);
@@ -18,19 +18,19 @@ class CashRegisterGroupService {
         return listCashRegisterGroups;
     }
 
-    async show(id: number, ongId: number) {
+    async show(id: string, ongId: string) {
         const selectedCashRegisterGroup = await cashRegisterGroupRepository.show(id, ongId);
         
         return selectedCashRegisterGroup;
     }
 
-    async update(id: number, data: CashRegisterGroupInterface) {
-        const updatedCashRegisterGroup = await cashRegisterGroupRepository.update(id, data);
+    async update(id: string, ongId: string, data: CashRegisterGroupInterface) {
+        const updatedCashRegisterGroup = await cashRegisterGroupRepository.update(id, ongId, data);
         
         return updatedCashRegisterGroup;
     }
 
-    async delete(id: number, ongId: number) {
+    async delete(id: string, ongId: string) {
         const deletedCashRegisterGroup = await cashRegisterGroupRepository.delete(id, ongId);
         
         return deletedCashRegisterGroup;

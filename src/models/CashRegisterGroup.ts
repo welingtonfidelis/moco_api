@@ -1,16 +1,11 @@
 import Sequelize, { Model } from 'sequelize';
 import { sequelize } from '../database/connection';
-import { UserInterface } from '../entities/User';
+import { CashRegisterGroupInterface } from '../entities/CashRegisterGroup';
 
-class UserModel extends Model<UserInterface> {
+class CashRegisterGroupModel extends Model<CashRegisterGroupInterface> {
   id!: string;
-  name!: string;
-  email!: string;
-  phone!: string;
-  user!: string;
-  birth!: Date;
-  password!: string;
-  address!: string;
+  description!: string;
+  observation!: string;
   ong_id!: string;
 
   // timestamps!
@@ -18,7 +13,7 @@ class UserModel extends Model<UserInterface> {
   readonly updated_at!: Date;
 }
 
-UserModel.init(
+CashRegisterGroupModel.init(
   {
     id: {
       type: Sequelize.UUID,
@@ -26,32 +21,11 @@ UserModel.init(
       allowNull: false,
       primaryKey: true
     },
-    name: {
+    description: {
       allowNull: false,
       type: Sequelize.STRING
     },
-    email: {
-      allowNull: false,
-      type: Sequelize.STRING,
-      unique: true
-    },
-    phone: {
-      type: Sequelize.STRING
-    },
-    user: {
-      allowNull: false,
-      type: Sequelize.STRING,
-      unique: true
-    },
-    password: {
-      allowNull: false,
-      type: Sequelize.STRING
-    },
-    birth: {
-      allowNull: false,
-      type: Sequelize.DATE
-    },
-    address: {
+    observation: {
       type: Sequelize.STRING,
     },
     ong_id: {
@@ -61,7 +35,7 @@ UserModel.init(
   },
   {
     sequelize,
-    tableName: 'users',
+    tableName: 'cash_register_groups',
     createdAt: 'created_at',
     updatedAt: 'updated_at',
     deletedAt: 'deleted_at',
@@ -71,5 +45,5 @@ UserModel.init(
 );
 
 export {
-  UserModel
+  CashRegisterGroupModel
 }

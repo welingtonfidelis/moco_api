@@ -1,4 +1,4 @@
-import { OngInterface } from "../models/Ong";
+import { OngInterface } from "../entities/Ong";
 import { OngRepository } from "../repository/Ong";
 
 const ongRepository = new OngRepository();

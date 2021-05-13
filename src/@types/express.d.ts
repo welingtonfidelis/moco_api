@@ -1,7 +1,7 @@
 declare namespace Express {
     export interface Request {
-      userId: number;
-      ongId: number;
+      userId: string;
+      ongId: string;
       userIsAdmin: boolean;
     }
   }
