@@ -1,8 +1,8 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { TokenInterface } from '../entities/Token';
-import { UserLoginInterface } from '../entities/UserLogin';
 import { AppError } from '../errors/AppError';
+import { TokenInterface } from '../models/Token';
+import { UserLoginInterface } from '../models/User';
 import { UserRepository } from '../repository/User';
 
 const userRepository = new UserRepository();
@@ -25,20 +25,18 @@ class AuthService {
             throw new AppError(
                 'Invalid email or password',
                 401
-            )
+            );
         }
 
         const contentToken: TokenInterface = { 
-            userId: selectedUser.id!, ongId: selectedUser.OngId, userIsAdmin: selectedUser.isAdm 
+            userId: selectedUser.id!, ongId: selectedUser.ong_id
         }
         const token = jwt.sign(contentToken, jwtSecret, { expiresIn: '10h' });
 
+
         const logedUser: UserLoginInterface = {
-            email: selectedUser.email,
-            isAdm: selectedUser.isAdm,
             name: selectedUser.name,
-            user: selectedUser.user,
-            createdAt: selectedUser.createdAt,
+            email: selectedUser.email,
             token
         }
 

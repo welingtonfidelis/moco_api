@@ -20,6 +20,12 @@ export interface UserCreatedInterface {
   id: string;
 }
 
+export interface UserLoginInterface {
+  name: string;
+  email: string;
+  token: string
+}
+
 class UserModel extends Model<UserInterface> {
   id!: string;
   name!: string;
