@@ -1,7 +1,7 @@
 import { Op } from "sequelize";
 import bcrypt from 'bcryptjs';
 import { UserModel } from "../models/User";
-import { UserCreatedInterface, UserInterface } from "../entities/User";
+import { UserInterface } from "../entities/User";
 
 const saltRounds = 10;
 class UserRepository {
@@ -9,11 +9,8 @@ class UserRepository {
         data.password = bcrypt.hashSync(data.password, saltRounds);
 
         const savedUser = await UserModel.create(data);
-        const savedUserHandled: UserCreatedInterface = {
-            id: savedUser.id
-        }
 
-        return savedUserHandled;
+        return savedUser;
     }
 
     async findOneByUser(user: string) {

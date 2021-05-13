@@ -1,14 +1,11 @@
-import { CashRegisterGroupCreatedInterface, CashRegisterGroupInterface } from "../entities/CashRegisterGroup";
+import { CashRegisterGroupInterface } from "../entities/CashRegisterGroup";
 import { CashRegisterGroupModel } from "../models/CashRegisterGroup";
 
 class CashRegisterGroupRepository {
     async save(data: CashRegisterGroupInterface) {
         const savedCashRegisterGroup = await CashRegisterGroupModel.create(data);
-        const savedUserHandled: CashRegisterGroupCreatedInterface = {
-            id: savedCashRegisterGroup.id
-        }
 
-        return savedUserHandled;
+        return savedCashRegisterGroup;
     }
 
     async list(page: number, limit: number, ongId: string) {

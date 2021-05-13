@@ -1,4 +1,4 @@
-import { CashRegisterGroupInterface } from "../entities/CashRegisterGroup";
+import { CashRegisterGroupCreatedInterface, CashRegisterGroupInterface } from "../entities/CashRegisterGroup";
 import { CashRegisterGroupRepository } from "../repository/CashRegisterGroup";
 
 const cashRegisterGroupRepository = new CashRegisterGroupRepository();
@@ -6,8 +6,11 @@ const cashRegisterGroupRepository = new CashRegisterGroupRepository();
 class CashRegisterGroupService {
     async save(data: CashRegisterGroupInterface) {
         const savedCashRegisterGroup = await cashRegisterGroupRepository.save(data);
+        const savedCashRegisterGroupHandled: CashRegisterGroupCreatedInterface = {
+            id: savedCashRegisterGroup.id
+        }
         
-        return savedCashRegisterGroup;
+        return savedCashRegisterGroupHandled;
     }
 
     async list(page: number, limit: number, ongId: string) {

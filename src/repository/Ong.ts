@@ -1,15 +1,12 @@
-import { OngCreatedInterface, OngInterface } from "../entities/Ong";
+import { OngInterface } from "../entities/Ong";
 import { OngModel } from "../models/Ong";
 import { UserModel } from "../models/User";
 
 class OngRepository {
     async save(data: OngInterface) {
         const savedOng = await OngModel.create(data);
-        const savedOngHandled: OngCreatedInterface = {
-            id: savedOng.id
-        }
 
-        return savedOngHandled;
+        return savedOng;
     }
 
     async list() {
