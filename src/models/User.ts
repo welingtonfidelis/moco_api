@@ -1,6 +1,7 @@
 import Sequelize, { Model } from 'sequelize';
 import { sequelize } from '../database/connection';
 import { UserInterface } from '../entities/User';
+import { OngModel } from './Ong';
 
 class UserModel extends Model<UserInterface> {
   id!: string;

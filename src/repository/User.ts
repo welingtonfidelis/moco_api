@@ -2,6 +2,7 @@ import { Op } from "sequelize";
 import bcrypt from 'bcryptjs';
 import { UserModel } from "../models/User";
 import { UserInterface } from "../entities/User";
+import { OngModel } from "../models/Ong";
 
 const saltRounds = 10;
 class UserRepository {
@@ -17,7 +18,15 @@ class UserRepository {
         const selectedUser = await UserModel.findOne({
             where: {
                 [Op.or]: [{ user }, { email: user }]
-            }
+            },
+            include: [
+                {
+                    model: OngModel,
+                    as: 'ong',
+                    required: true,
+                    attributes: ['name']
+                }
+            ]
         });
 
         return selectedUser;

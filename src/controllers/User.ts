@@ -10,6 +10,8 @@ class UserController {
     async save(req: Request, res: Response) {
         try {
             const data: UserInterface = req.body;
+            const { ongId } = req;
+            data.ong_id = ongId;
             
             const savedUser = await userService.save(data);
             const responseHandled = responseClientService.successResponse(savedUser);

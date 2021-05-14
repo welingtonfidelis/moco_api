@@ -1,4 +1,4 @@
-import Sequelize, { Model } from 'sequelize';
+import Sequelize, { Association, HasMany, Model } from 'sequelize';
 import { sequelize } from '../database/connection';
 import { OngInterface } from '../entities/Ong';
 import { UserModel } from './User';
@@ -20,6 +20,12 @@ class OngModel extends Model<OngInterface> {
   // timestamps!
   readonly created_at!: Date;
   readonly updated_at!: Date;
+
+  readonly users?: UserModel[]; // Note this is optional since it's only populated when explicitly requested in code
+
+  static associations: {
+    users: Association<OngModel, UserModel>;
+  };
 }
 
 OngModel.init(
@@ -70,11 +76,24 @@ OngModel.init(
   }
 );
 
-OngModel.hasMany(UserModel, {
-  sourceKey: "id",
-  foreignKey: "ong_id",
-  as: "users", // this determines the name in `associations`!
-});
+OngModel.hasMany(
+  UserModel,
+  {
+    sourceKey: "id",
+    foreignKey: "ong_id",
+    onDelete: "CASCADE",
+    as: "users",
+  }
+);
+
+UserModel.belongsTo(
+  OngModel, 
+  { 
+    foreignKey: 'ong_id',
+    targetKey: 'id',
+    as: 'ong'
+  }
+);
 
 export {
   OngModel
