@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { CashRegisterInterface } from "../entities/CashRegister";
+import { CashRegisterFilterInterface, CashRegisterInterface } from "../entities/CashRegister";
 import { CashRegisterService } from "../services/CashRegister";
 import { ResponseClientService } from "../services/ResponseClient";
 
@@ -9,7 +9,7 @@ const cashRegisterService = new CashRegisterService();
 class CashRegisterController {
     async save(req: Request, res: Response) {
         try {
-            const { 
+            const {
                 description, observation, paid_in, value, type, cash_register_group_id
             } = req.body;
             const { userId, ongId } = req;
@@ -50,6 +50,33 @@ class CashRegisterController {
         }
     }
 
+    async listByFilter(req: Request, res: Response) {
+        try {
+            const { ongId } = req;
+            const page = parseInt(req.query?.page as string ?? '1');
+            const limit = parseInt(req.query?.limit as string ?? '10');
+            const date_start = req.query?.date_start as string
+            const date_end = req.query?.date_end as string
+            const description = req.query?.description as string;
+            const type = req.query?.type as string;
+            const cash_register_group_id = req.query?.cash_register_group_id as string;
+            
+            const filters: CashRegisterFilterInterface = {
+                date_start, date_end, description, type, cash_register_group_id
+            }
+
+            const listCashRegisters = await cashRegisterService
+                .listByFilter(page, limit, ongId, filters
+            );
+            const responseHandled = responseClientService.successResponse(listCashRegisters);
+
+            return res.json(responseHandled);
+        } catch (error) {
+            const errorHandled = responseClientService.errorResponse(error);
+            return res.status(errorHandled.status_code).json(errorHandled);
+        }
+    }
+
     async show(req: Request, res: Response) {
         try {
             const { id } = req.params;
@@ -67,7 +94,7 @@ class CashRegisterController {
 
     async update(req: Request, res: Response) {
         try {
-            const { 
+            const {
                 description, observation, paid_in, value, type, cash_register_group_id
             } = req.body;
             const { id } = req.params;

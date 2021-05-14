@@ -12,3 +12,7 @@ export const removeSpecialCharacters = (word: string) => {
 
     return wordHandled;
 }
+
+export const isEmptyObject = (obj: object) => {
+    return Object.keys(obj).length === 0;
+}

@@ -1,10 +1,17 @@
-import { CashRegisterCreatedInterface, CashRegisterInterface } from "../entities/CashRegister";
+import { CashRegisterCreatedInterface, CashRegisterFilterInterface, CashRegisterInterface } from "../entities/CashRegister";
 import { CashRegisterRepository } from "../repository/CashRegister";
 
 const cashRegisterRepository = new CashRegisterRepository();
 
 class CashRegisterService {
     async save(data: CashRegisterInterface) {
+        const paidIntHandled = new Date(data.paid_in);
+        
+        paidIntHandled.setHours(0);
+        paidIntHandled.setMinutes(0);
+        paidIntHandled.setSeconds(0);
+        data.paid_in = paidIntHandled;
+
         const savedCashRegister = await cashRegisterRepository.save(data);
         const savedCashRegisterHandled: CashRegisterCreatedInterface = {
             id: savedCashRegister.id
@@ -17,7 +24,19 @@ class CashRegisterService {
         const skip = limit * (page - 1);
 
         const listCashRegisters = await cashRegisterRepository.list(skip, limit, ongId);
-        
+
+        return listCashRegisters;
+    }
+
+    async listByFilter(
+        page: number, limit: number, ongId: string, filter: CashRegisterFilterInterface
+    ) {
+        const skip = limit * (page - 1);
+
+        const listCashRegisters = await cashRegisterRepository.listByFilter(
+            skip, limit, ongId, filter
+        );
+
         return listCashRegisters;
     }
 

@@ -15,3 +15,11 @@ export interface CashRegisterInterface {
 export interface CashRegisterCreatedInterface {
     id: string;
 }
+
+export interface CashRegisterFilterInterface {
+    date_start: string;
+    date_end: string;
+    description?: string;
+    type?: string;
+    cash_register_group_id?: string;
+}

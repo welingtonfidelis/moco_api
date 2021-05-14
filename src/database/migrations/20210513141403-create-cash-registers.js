@@ -69,7 +69,7 @@ module.exports = {
       }
     })
     .then(() => {
-      queryInterface.addIndex('cash_registers', ['description', 'paid_in'])
+      queryInterface.addIndex('cash_registers', ['description', 'paid_in', 'type'])
     });
   },
 
