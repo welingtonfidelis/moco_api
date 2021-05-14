@@ -8,9 +8,12 @@
   },
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only --ignore-watch node_modules src/server.ts",
+    "migrate:generate": "sequelize-cli migration:generate --name",
     "migrate:apply": "sequelize-cli db:migrate",
     "migrate:revert": "sequelize-cli db:migrate:undo",
-    "migrate:generate": "sequelize-cli migration:generate --name"
+    "migrate:revert:all": "sequelize-cli db:migrate:undo:all",
+    "seed:apply": "sequelize-cli db:seed:all",
+    "seed:revert": "sequelize-cli db:seed:undo:all"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
