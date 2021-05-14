@@ -14,4 +14,10 @@ export interface OngInterface {
 
 export interface OngCreatedInterface {
     id: string;
+    user: {
+        id: string;
+        user: string;
+        email: string;
+        password: string;
+    }
 }

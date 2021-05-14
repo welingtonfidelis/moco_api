@@ -26,6 +26,14 @@ class CashRegisterGroupRepository {
         return selectedCashRegisterGroup;
     }
 
+    async findOneByDescription(description: string, ongId: string) {
+        const selectedCashRegisterGroup = await CashRegisterGroupModel.findOne({
+            where: { description, ong_id: ongId }
+        });
+
+        return selectedCashRegisterGroup;
+    }
+
     async update(id: string, ongId: string, data: CashRegisterGroupInterface) {
         const updatedCashRegisterGroup = await CashRegisterGroupModel.update(
             data,

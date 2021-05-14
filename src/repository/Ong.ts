@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import { OngInterface } from "../entities/Ong";
 import { OngModel } from "../models/Ong";
 import { UserModel } from "../models/User";
@@ -26,6 +27,16 @@ class OngRepository {
         });
 
         return listOngs;
+    }
+
+    async findOneByEmailOrCnpj(email: string, cnpj: string) {
+        const selectedOng = await OngModel.findOne({
+            where: {
+                [Op.or]: [{ email }, { cnpj }]
+            }
+        });
+
+        return selectedOng;
     }
 }
 

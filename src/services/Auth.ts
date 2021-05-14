@@ -10,7 +10,7 @@ const userRepository = new UserRepository();
 class AuthService {
     async login(user: string, password: string) {
         const jwtSecret: string = process.env.SECRET!;
-        const selectedUser = await userRepository.findOneByUser(user);
+        const selectedUser = await userRepository.findOneByUserOrEmail(user);
 
         if (!selectedUser) {
             throw new AppError(
@@ -28,7 +28,7 @@ class AuthService {
             );
         }
 
-        const contentToken: TokenInterface = { 
+        const contentToken: TokenInterface = {
             userId: selectedUser.id, ongId: selectedUser.ong_id
         }
         const token = jwt.sign(contentToken, jwtSecret, { expiresIn: '10h' });

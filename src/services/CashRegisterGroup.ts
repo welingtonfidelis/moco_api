@@ -1,10 +1,18 @@
 import { CashRegisterGroupCreatedInterface, CashRegisterGroupInterface } from "../entities/CashRegisterGroup";
+import { AppError } from "../errors/AppError";
 import { CashRegisterGroupRepository } from "../repository/CashRegisterGroup";
 
 const cashRegisterGroupRepository = new CashRegisterGroupRepository();
 
 class CashRegisterGroupService {
     async save(data: CashRegisterGroupInterface) {
+        const cashRegisterGroupAlreadyExists = await cashRegisterGroupRepository
+            .findOneByDescription(data.description, data.ong_id);
+
+        if(cashRegisterGroupAlreadyExists) {
+            throw new AppError('Description already in use', 400);
+        }
+
         const savedCashRegisterGroup = await cashRegisterGroupRepository.save(data);
         const savedCashRegisterGroupHandled: CashRegisterGroupCreatedInterface = {
             id: savedCashRegisterGroup.id

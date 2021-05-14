@@ -14,10 +14,10 @@ class UserRepository {
         return savedUser;
     }
 
-    async findOneByUser(user: string) {
+    async findOneByUserOrEmail(user: string, email = user) {
         const selectedUser = await UserModel.findOne({
             where: {
-                [Op.or]: [{ user }, { email: user }]
+                [Op.or]: [{ user }, { email }]
             },
             include: [
                 {
