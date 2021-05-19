@@ -11,13 +11,13 @@ class OngRepository {
     }
 
     async list() {
-        const listOngs: OngInterface[] = await OngModel.findAll();
+        const listOngs = await OngModel.findAndCountAll();
 
         return listOngs;
     }
 
     async listWithUsers() {
-        const listOngs: OngInterface[] = await OngModel.findAll({
+        const listOngs = await OngModel.findAndCountAll({
             include: [
                 {
                     model: UserModel,

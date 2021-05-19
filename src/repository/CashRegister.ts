@@ -11,7 +11,7 @@ class CashRegisterRepository {
     }
 
     async list(page: number, limit: number, ongId: string) {
-        const listCashRegisters = await CashRegisterModel.findAll({
+        const listCashRegisters = await CashRegisterModel.findAndCountAll({
             where: { ong_id: ongId },
             offset: page,
             limit,
