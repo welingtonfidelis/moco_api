@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import { CashRegisterGroupInterface } from "../entities/CashRegisterGroup";
 import { CashRegisterGroupModel } from "../models/CashRegisterGroup";
 
@@ -29,6 +30,16 @@ class CashRegisterGroupRepository {
     async findOneByDescription(description: string, ongId: string) {
         const selectedCashRegisterGroup = await CashRegisterGroupModel.findOne({
             where: { description, ong_id: ongId }
+        });
+
+        return selectedCashRegisterGroup;
+    }
+
+    async findOneByDescriptionWithDifferentId(id: string, description: string, ongId: string) {
+        const selectedCashRegisterGroup = await CashRegisterGroupModel.findOne({
+            where: { 
+                id: { [Op.not]: id }, description, ong_id: ongId 
+            }
         });
 
         return selectedCashRegisterGroup;

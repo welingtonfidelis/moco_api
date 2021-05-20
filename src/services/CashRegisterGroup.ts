@@ -9,7 +9,7 @@ class CashRegisterGroupService {
         const cashRegisterGroupAlreadyExists = await cashRegisterGroupRepository
             .findOneByDescription(data.description, data.ong_id);
 
-        if(cashRegisterGroupAlreadyExists) {
+        if (cashRegisterGroupAlreadyExists) {
             throw new AppError('Description already in use', 400);
         }
 
@@ -17,7 +17,7 @@ class CashRegisterGroupService {
         const savedCashRegisterGroupHandled: CashRegisterGroupCreatedInterface = {
             id: savedCashRegisterGroup.id
         }
-        
+
         return savedCashRegisterGroupHandled;
     }
 
@@ -25,25 +25,32 @@ class CashRegisterGroupService {
         const skip = limit * (page - 1);
 
         const listCashRegisterGroups = await cashRegisterGroupRepository.list(skip, limit, ongId);
-        
+
         return listCashRegisterGroups;
     }
 
     async show(id: string, ongId: string) {
         const selectedCashRegisterGroup = await cashRegisterGroupRepository.show(id, ongId);
-        
+
         return selectedCashRegisterGroup;
     }
 
     async update(id: string, ongId: string, data: CashRegisterGroupInterface) {
+        const cashRegisterGroupAlreadyExists = await cashRegisterGroupRepository
+            .findOneByDescriptionWithDifferentId(id, data.description, data.ong_id);
+
+        if (cashRegisterGroupAlreadyExists) {
+            throw new AppError('Description already in use', 400);
+        }
+
         const updatedCashRegisterGroup = await cashRegisterGroupRepository.update(id, ongId, data);
-        
+
         return updatedCashRegisterGroup;
     }
 
     async delete(id: string, ongId: string) {
         const deletedCashRegisterGroup = await cashRegisterGroupRepository.delete(id, ongId);
-        
+
         return deletedCashRegisterGroup;
     }
 }
