@@ -6,10 +6,10 @@ const ongUpdateSchema = Joi.object({
     logo: Joi.string().required(),
     cnpj: Joi.string().required(),
     email: Joi.string().email().required(),
-    social_1: Joi.string(),
-    social_2: Joi.string(),
-    state_law: Joi.string(),
-    municipal_law: Joi.string(),
+    social_1: Joi.string().allow(''),
+    social_2: Joi.string().allow(''),
+    state_law: Joi.string().allow(''),
+    municipal_law: Joi.string().allow(''),
 });
 
 export {

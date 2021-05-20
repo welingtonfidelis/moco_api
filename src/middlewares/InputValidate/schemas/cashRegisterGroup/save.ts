@@ -2,7 +2,7 @@ import Joi from 'joi';
 
 const cashRegisterGroupSaveSchema = Joi.object({
     description: Joi.string().required(),
-    observation: Joi.string(),
+    observation: Joi.string().allow(''),
 });
 
 export {
