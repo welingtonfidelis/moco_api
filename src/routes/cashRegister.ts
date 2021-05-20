@@ -24,7 +24,7 @@ cashRegisterRouter.get(
 cashRegisterRouter.get(
     '/cash-registers/report',
     inputValidateMidleware(cashRegisterReportSchema),
-    cashRegisterController.listByFilter
+    cashRegisterController.list
 );
 cashRegisterRouter.get(
     '/cash-registers/:id', 

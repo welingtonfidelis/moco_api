@@ -10,30 +10,28 @@ class CashRegisterRepository {
         return savedCashRegister;
     }
 
-    async list(page: number, limit: number, ongId: string) {
-        const listCashRegisters = await CashRegisterModel.findAndCountAll({
-            where: { ong_id: ongId },
-            offset: page,
-            limit,
-            include: [{
-                model: CashRegisterGroupModel,
-                as: 'cash_register_group'
-            }]
-        });
-
-        return listCashRegisters;
-    }
-
-    async listByFilter(
+    async list(
         page: number, limit: number, ongId: string, filter: CashRegisterFilterInterface
     ) {
         const where: any = {
-            ong_id: ongId,
-            paid_in: {
-                [Op.between]: [filter.date_start, filter.date_end]
-            }
+            ong_id: ongId
         };
 
+        if (filter.date_start && filter.date_end) {
+            const start = new Date(filter.date_start);
+            const end = new Date(filter.date_end);
+            
+            start.setHours(0);
+            start.setMinutes(0);
+            start.setSeconds(0);
+            end.setHours(0);
+            end.setMinutes(0);
+            end.setSeconds(0);
+
+            where['paid_in'] = {
+                [Op.between]: [start, end]
+            }
+        }
         if (filter.cash_register_group_id) {
             where['cash_register_group_id'] = filter.cash_register_group_id;
         }
@@ -46,7 +44,7 @@ class CashRegisterRepository {
             };
         }
 
-        const listCashRegisters = await CashRegisterModel.findAll({
+        const listCashRegisters = await CashRegisterModel.findAndCountAll({
             where,
             offset: page,
             limit,

@@ -1,6 +1,7 @@
 import { Op } from "sequelize";
 import { CashRegisterGroupInterface } from "../entities/CashRegisterGroup";
 import { CashRegisterGroupModel } from "../models/CashRegisterGroup";
+import { CashRegisterGroupFilterInterface } from '../entities/CashRegisterGroup';
 
 class CashRegisterGroupRepository {
     async save(data: CashRegisterGroupInterface) {
@@ -9,9 +10,17 @@ class CashRegisterGroupRepository {
         return savedCashRegisterGroup;
     }
 
-    async list(page: number, limit: number, ongId: string) {
+    async list(
+        page: number, limit: number, ongId: string, filter: CashRegisterGroupFilterInterface
+    ) {
+        const where: any = { 
+            ong_id: ongId 
+        }
+
+        if (filter.description) where.description = { [Op.iLike]: `%${filter.description}%` }
+
         const listCashRegisterGroups = await CashRegisterGroupModel.findAndCountAll({
-            where: { ong_id: ongId },
+            where,
             offset: page,
             limit
         });

@@ -20,22 +20,13 @@ class CashRegisterService {
         return savedCashRegisterHandled;
     }
 
-    async list(page: number, limit: number, ongId: string) {
-        const skip = limit * (page - 1);
-
-        const listCashRegisters = await cashRegisterRepository.list(skip, limit, ongId);
-
-        return listCashRegisters;
-    }
-
-    async listByFilter(
+    async list(
         page: number, limit: number, ongId: string, filter: CashRegisterFilterInterface
     ) {
         const skip = limit * (page - 1);
 
-        const listCashRegisters = await cashRegisterRepository.listByFilter(
-            skip, limit, ongId, filter
-        );
+        const listCashRegisters = await cashRegisterRepository
+            .list(skip, limit, ongId, filter);
 
         return listCashRegisters;
     }

@@ -1,4 +1,7 @@
-import { CashRegisterGroupCreatedInterface, CashRegisterGroupInterface } from "../entities/CashRegisterGroup";
+import { 
+    CashRegisterGroupCreatedInterface, CashRegisterGroupInterface, 
+    CashRegisterGroupFilterInterface 
+} from "../entities/CashRegisterGroup";
 import { AppError } from "../errors/AppError";
 import { CashRegisterGroupRepository } from "../repository/CashRegisterGroup";
 
@@ -21,10 +24,13 @@ class CashRegisterGroupService {
         return savedCashRegisterGroupHandled;
     }
 
-    async list(page: number, limit: number, ongId: string) {
+    async list(
+        page: number, limit: number, ongId: string, filter: CashRegisterGroupFilterInterface
+    ) {
         const skip = limit * (page - 1);
 
-        const listCashRegisterGroups = await cashRegisterGroupRepository.list(skip, limit, ongId);
+        const listCashRegisterGroups = await cashRegisterGroupRepository
+            .list(skip, limit, ongId, filter);
 
         return listCashRegisterGroups;
     }

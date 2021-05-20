@@ -1,5 +1,7 @@
 import { Request, Response } from "express"
-import { CashRegisterGroupInterface } from "../entities/CashRegisterGroup";
+import { 
+    CashRegisterGroupInterface, CashRegisterGroupFilterInterface 
+} from "../entities/CashRegisterGroup";
 import { CashRegisterGroupService } from "../services/CashRegisterGroup";
 import { ResponseClientService } from "../services/ResponseClient";
 
@@ -31,9 +33,14 @@ class CashRegisterGroupController {
         try {
             const page = parseInt(req.query?.page as string ?? '1');
             const limit = parseInt(req.query?.limit as string ?? '10');
+            const description = req.query?.description as string;
+            const filter: CashRegisterGroupFilterInterface = {
+                description
+            }
             const { ongId } = req;
 
-            const listCashRegisterGroups = await cashRegisterGroupService.list(page, limit, ongId);
+            const listCashRegisterGroups = await cashRegisterGroupService
+                .list(page, limit, ongId, filter);
             const responseHandled = responseClientService.successResponse(listCashRegisterGroups);
 
             return res.json(responseHandled);

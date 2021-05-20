@@ -36,22 +36,6 @@ class CashRegisterController {
 
     async list(req: Request, res: Response) {
         try {
-            const page = parseInt(req.query?.page as string ?? '1');
-            const limit = parseInt(req.query?.limit as string ?? '10');
-            const { ongId } = req;
-
-            const listCashRegisters = await cashRegisterService.list(page, limit, ongId);
-            const responseHandled = responseClientService.successResponse(listCashRegisters);
-
-            return res.json(responseHandled);
-        } catch (error) {
-            const errorHandled = responseClientService.errorResponse(error);
-            return res.status(errorHandled.status_code).json(errorHandled);
-        }
-    }
-
-    async listByFilter(req: Request, res: Response) {
-        try {
             const { ongId } = req;
             const page = parseInt(req.query?.page as string ?? '1');
             const limit = parseInt(req.query?.limit as string ?? '10');
@@ -60,14 +44,12 @@ class CashRegisterController {
             const description = req.query?.description as string;
             const type = req.query?.type as string;
             const cash_register_group_id = req.query?.cash_register_group_id as string;
-            
-            const filters: CashRegisterFilterInterface = {
+            const filter: CashRegisterFilterInterface = {
                 date_start, date_end, description, type, cash_register_group_id
             }
 
             const listCashRegisters = await cashRegisterService
-                .listByFilter(page, limit, ongId, filters
-            );
+                .list(page, limit, ongId, filter);
             const responseHandled = responseClientService.successResponse(listCashRegisters);
 
             return res.json(responseHandled);

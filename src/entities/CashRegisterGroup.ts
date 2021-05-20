@@ -10,3 +10,7 @@ export interface CashRegisterGroupInterface {
 export interface CashRegisterGroupCreatedInterface {
     id: string;
 }
+
+export interface CashRegisterGroupFilterInterface {
+    description: string;
+}
