@@ -7,8 +7,7 @@
     "node": "14.x"
   },
   "scripts": {
-    "build": "tsc -p .",
-    "start": "yarn build && ts-node dist/server.js",
+    "start": "node dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only --ignore-watch node_modules src/server.ts",
     "migrate:generate": "sequelize-cli migration:generate --name",
     "migrate:apply": "sequelize-cli db:migrate",
