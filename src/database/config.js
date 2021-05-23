@@ -7,7 +7,7 @@ module.exports = {
     "database": process.env.DB_NAME,
     "host": process.env.DB_HOST,
     "dialect": "postgres",
-    "logging": true
+    "logging": console.log
   },
   "test": {
     "username": process.env.DB_USER,
@@ -15,7 +15,7 @@ module.exports = {
     "database": process.env.DB_NAME,
     "host": process.env.DB_HOST,
     "dialect": "postgres",
-    "logging": true
+    "logging": console.log
   },
   "production": {
     "username": process.env.DB_USER,
@@ -23,6 +23,11 @@ module.exports = {
     "database": process.env.DB_NAME,
     "host": process.env.DB_HOST,
     "dialect": "postgres",
-    "logging": false
+    "logging": false,
+    "dialectOptions": {
+      "ssl": {
+        "rejectUnauthorized": false
+      }
+    }
   }
 }
