@@ -3,6 +3,7 @@ import { CashRegisterGroupController } from "../controllers/CashRegisterGroup";
 import { inputValidateMidleware } from "../middlewares/InputValidate";
 import { cashRegisterGroupDeleteSchema } from "../middlewares/InputValidate/schemas/cashRegisterGroup/delete";
 import { cashRegisterGroupListSchema } from "../middlewares/InputValidate/schemas/cashRegisterGroup/list";
+import { cashRegisterGroupListSimpleSchema } from "../middlewares/InputValidate/schemas/cashRegisterGroup/listSimple";
 import { cashRegisterGroupSaveSchema } from "../middlewares/InputValidate/schemas/cashRegisterGroup/save";
 import { cashRegisterGroupShowSchema } from "../middlewares/InputValidate/schemas/cashRegisterGroup/show";
 import { cashRegisterGroupUpdateSchema } from "../middlewares/InputValidate/schemas/cashRegisterGroup/update";
@@ -19,6 +20,11 @@ cashRegisterGroupRouter.get(
     '/cash-register-groups',
     inputValidateMidleware(cashRegisterGroupListSchema),
     cashRegisterGroupController.list
+);
+cashRegisterGroupRouter.get(
+    '/cash-register-groups/list-simple',
+    inputValidateMidleware(cashRegisterGroupListSimpleSchema),
+    cashRegisterGroupController.listSimple
 );
 cashRegisterGroupRouter.get(
     '/cash-register-groups/:id',

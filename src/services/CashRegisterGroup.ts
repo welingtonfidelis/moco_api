@@ -35,6 +35,12 @@ class CashRegisterGroupService {
         return listCashRegisterGroups;
     }
 
+    async listSimple(ongId: string) {
+        const listCashRegisterGroups = await cashRegisterGroupRepository.listSimple(ongId);
+
+        return listCashRegisterGroups;
+    }
+
     async show(id: string, ongId: string) {
         const selectedCashRegisterGroup = await cashRegisterGroupRepository.show(id, ongId);
 

@@ -28,6 +28,15 @@ class CashRegisterGroupRepository {
         return listCashRegisterGroups;
     }
 
+    async listSimple(ongId: string) {
+        const listCashRegisterGroups = await CashRegisterGroupModel.findAndCountAll({
+            where: { ong_id: ongId },
+            attributes: ['id', 'description']
+        });
+
+        return listCashRegisterGroups;
+    }
+
     async show(id: string, ongId: string) {
         const selectedCashRegisterGroup = await CashRegisterGroupModel.findOne({
             where: { id, ong_id: ongId }

@@ -50,6 +50,21 @@ class CashRegisterGroupController {
         }
     }
 
+    async listSimple(req: Request, res: Response) {
+        try {
+            const { ongId } = req;
+
+            const listCashRegisterGroups = await cashRegisterGroupService
+                .listSimple(ongId);
+            const responseHandled = responseClientService.successResponse(listCashRegisterGroups);
+
+            return res.json(responseHandled);
+        } catch (error) {
+            const errorHandled = responseClientService.errorResponse(error);
+            return res.status(errorHandled.status_code).json(errorHandled);
+        }
+    }
+
     async show(req: Request, res: Response) {
         try {
             const { id } = req.params;
