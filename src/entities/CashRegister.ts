@@ -23,3 +23,22 @@ export interface CashRegisterFilterInterface {
     type?: string;
     cash_register_group_id?: string;
 }
+
+
+export interface CashRegisterReportItem {
+    id: string;
+    description: string;
+    value: number;
+    paid_in: Date;
+    type: string;
+    cash_register_group_description: string;
+}
+export interface CashRegisterReportList {
+    date_start: string;
+    date_end: string;
+    revenue: number;
+    expense: number;
+    profit: number;
+    count: number;
+    rows: CashRegisterReportItem[]
+}
