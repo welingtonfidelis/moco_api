@@ -1,4 +1,8 @@
 import { Request, Response } from "express"
+import fs from 'fs';
+import { resolve } from 'path';
+import htmlToPdf from 'html-pdf';
+
 import { CashRegisterFilterInterface, CashRegisterInterface } from "../entities/CashRegister";
 import { CashRegisterService } from "../services/CashRegister";
 import { ResponseClientService } from "../services/ResponseClient";
@@ -82,15 +86,30 @@ class CashRegisterController {
             const description = req.query?.description as string;
             const type = req.query?.type as string;
             const cash_register_group_id = req.query?.cash_register_group_id as string;
+            const download_pdf = req.query.download_pdf;
             const filter: CashRegisterFilterInterface = {
                 date_start, date_end, description, type, cash_register_group_id
             }
 
             const listCashRegisters = await cashRegisterService
                 .reportList(ongId, filter);
-            const responseHandled = responseClientService.successResponse(listCashRegisters);
 
-            return res.json(responseHandled);
+            if (!download_pdf || download_pdf === 'false') {
+                const responseHandled = responseClientService.successResponse(listCashRegisters);
+
+                return res.json(responseHandled);
+            }
+
+            const htmlPath = resolve(__dirname, '..', 'views', 'cashRegisterReport.html');
+            const html = fs.readFileSync(htmlPath).toString('utf8');
+
+            htmlToPdf.create(html, { type: 'pdf', format: 'A4', orientation: 'portrait' })
+                .toBuffer((err, buffer) => {
+                    if (err) return res.status(500).json(err)
+
+                    return res.end(buffer)
+                });
+
         } catch (error) {
             const errorHandled = responseClientService.errorResponse(error);
             return res.status(errorHandled.status_code).json(errorHandled);
