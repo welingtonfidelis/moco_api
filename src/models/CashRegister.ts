@@ -1,6 +1,7 @@
-import Sequelize, { Model } from 'sequelize';
+import Sequelize, { Association, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, Model } from 'sequelize';
 import { sequelize } from '../database/connection';
 import { CashRegisterInterface } from '../entities/CashRegister';
+import { CashRegisterGroupModel } from './CashRegisterGroup';
 
 class CashRegisterModel extends Model<CashRegisterInterface> {
   id!: string;
@@ -13,9 +14,9 @@ class CashRegisterModel extends Model<CashRegisterInterface> {
   ong_id!: string;
   user_id!: string;
 
-  // timestamps!
   readonly created_at!: Date;
   readonly updated_at!: Date;
+  readonly cash_register_group!: CashRegisterGroupModel;
 }
 
 CashRegisterModel.init(

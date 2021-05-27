@@ -1,4 +1,4 @@
-import { CashRegisterCreatedInterface, CashRegisterFilterInterface, CashRegisterInterface } from "../entities/CashRegister";
+import { CashRegisterCreatedInterface, CashRegisterFilterInterface, CashRegisterInterface, CashRegisterReportItem, CashRegisterReportList } from "../entities/CashRegister";
 import { CashRegisterRepository } from "../repository/CashRegister";
 
 const cashRegisterRepository = new CashRegisterRepository();
@@ -29,6 +29,47 @@ class CashRegisterService {
             .list(skip, limit, ongId, filter);
 
         return listCashRegisters;
+    }
+
+    async reportCashOnHand(ongId: string) {
+        const total = await cashRegisterRepository.reportCashOnHand(ongId);
+
+        return total;
+    }
+
+    async reportList(ongId: string, filter: CashRegisterFilterInterface) {
+        const listCashRegisters = await cashRegisterRepository
+            .reportList(ongId, filter);
+
+        const listCashRegistersHandled: CashRegisterReportList = {
+            count: listCashRegisters.count,
+            date_start: filter.date_start,
+            date_end: filter.date_end,
+            revenue: 0,
+            expense: 0,
+            profit: 0,
+            rows: [],
+        }
+
+        listCashRegistersHandled.rows = listCashRegisters.rows.map(item => {
+            listCashRegistersHandled.revenue += item.value;
+
+            if(item.type === 'in') listCashRegistersHandled.profit += item.value;
+            else listCashRegistersHandled.expense += item.value;
+
+            const reportItem: CashRegisterReportItem = {
+                id: item.id,
+                description: item.description,
+                paid_in: item.paid_in,
+                value: item.value,
+                type: item.type,
+                cash_register_group_description: item.cash_register_group.description
+            }
+
+            return reportItem;
+        });
+
+        return listCashRegistersHandled;
     }
 
     async show(id: string, ongId: string) {

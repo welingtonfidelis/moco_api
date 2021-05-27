@@ -1,4 +1,4 @@
-import { Op } from "sequelize";
+import { Op, QueryTypes } from "sequelize";
 import { CashRegisterFilterInterface, CashRegisterInterface } from "../entities/CashRegister";
 import { CashRegisterModel } from "../models/CashRegister";
 import { CashRegisterGroupModel } from "../models/CashRegisterGroup";
@@ -20,7 +20,7 @@ class CashRegisterRepository {
         if (filter.date_start && filter.date_end) {
             const start = new Date(filter.date_start);
             const end = new Date(filter.date_end);
-            
+
             start.setHours(0);
             start.setMinutes(0);
             start.setSeconds(0);
@@ -57,6 +57,72 @@ class CashRegisterRepository {
         return listCashRegisters;
     }
 
+    async reportCashOnHand(ongId: string) {
+        const [resultQuery]: any = await CashRegisterModel.sequelize?.query(
+            `SELECT 
+                round(
+                    SUM(
+                        CASE WHEN cr.type = 'out' 
+                        THEN (cr.value * -1) 
+                        ELSE cr.value 
+                        END
+                    )::numeric, 2
+                ) AS total
+            FROM cash_registers cr
+            WHERE ong_id = ?`,
+            {
+                replacements: [ongId],
+                type: QueryTypes.SELECT
+            }
+        );
+
+        const resultQueryHandled = resultQuery && resultQuery.total ? resultQuery : { total: '0' }
+
+        return resultQueryHandled;
+    }
+
+    async reportList(ongId: string, filter: CashRegisterFilterInterface) {
+        const where: any = {
+            ong_id: ongId
+        };
+
+        const start = new Date(filter.date_start);
+        const end = new Date(filter.date_end);
+
+        start.setHours(0);
+        start.setMinutes(0);
+        start.setSeconds(0);
+        end.setHours(0);
+        end.setMinutes(0);
+        end.setSeconds(0);
+
+        where['paid_in'] = {
+            [Op.between]: [start, end]
+        }
+
+        if (filter.cash_register_group_id) {
+            where['cash_register_group_id'] = filter.cash_register_group_id;
+        }
+        if (filter.type) {
+            where['type'] = filter.type;
+        }
+        if (filter.description) {
+            where['description'] = {
+                [Op.iLike]: `%${filter.description}%`
+            };
+        }
+
+        const listCashRegisters = await CashRegisterModel.findAndCountAll({
+            where,
+            include: [{
+                model: CashRegisterGroupModel,
+                as: 'cash_register_group'
+            }]
+        });
+
+        return listCashRegisters;
+    }
+
     async show(id: string, ongId: string) {
         const selectedCashRegister = await CashRegisterModel.findOne({
             where: { id, ong_id: ongId }
@@ -69,7 +135,7 @@ class CashRegisterRepository {
         const updatedCashRegister = await CashRegisterModel.update(
             data,
             {
-                where: { id, ong_id: ongId}
+                where: { id, ong_id: ongId }
             });
 
         return updatedCashRegister;
