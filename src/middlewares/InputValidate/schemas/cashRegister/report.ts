@@ -5,7 +5,8 @@ const cashRegisterReportSchema = Joi.object({
     date_end: Joi.date().required(),
     description: Joi.string(),
     type: Joi.string().valid('in', 'out'),
-    cash_register_group_id: Joi.string().uuid()
+    cash_register_group_id: Joi.string().uuid(),
+    download_pdf: Joi.boolean()
 });
 
 export {

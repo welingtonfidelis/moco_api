@@ -1,10 +1,14 @@
 import { Request, Response } from "express"
+
 import { CashRegisterFilterInterface, CashRegisterInterface } from "../entities/CashRegister";
 import { CashRegisterService } from "../services/CashRegister";
+import { PdfMakerService } from "../services/PdfMaker";
 import { ResponseClientService } from "../services/ResponseClient";
+import { maskDate } from "../util";
 
 const responseClientService = new ResponseClientService();
 const cashRegisterService = new CashRegisterService();
+const pdfMakerService = new PdfMakerService();
 
 class CashRegisterController {
     async save(req: Request, res: Response) {
@@ -82,15 +86,28 @@ class CashRegisterController {
             const description = req.query?.description as string;
             const type = req.query?.type as string;
             const cash_register_group_id = req.query?.cash_register_group_id as string;
+            const download_pdf = req.query.download_pdf;
             const filter: CashRegisterFilterInterface = {
                 date_start, date_end, description, type, cash_register_group_id
             }
 
             const listCashRegisters = await cashRegisterService
                 .reportList(ongId, filter);
-            const responseHandled = responseClientService.successResponse(listCashRegisters);
 
-            return res.json(responseHandled);
+            if (!download_pdf || download_pdf === 'false') {
+                const responseHandled = responseClientService.successResponse(listCashRegisters);
+
+                return res.json(responseHandled);
+            }
+
+            const { total } = await cashRegisterService.reportCashOnHand(ongId);
+
+            const pdf = await pdfMakerService.cashRegisterReport(listCashRegisters, total);
+
+            res.setHeader('Content-disposition', `inline; filename=${maskDate(new Date())}.pdf`);
+            
+            return res.send(pdf);
+
         } catch (error) {
             const errorHandled = responseClientService.errorResponse(error);
             return res.status(errorHandled.status_code).json(errorHandled);
