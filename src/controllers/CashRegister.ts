@@ -1,11 +1,12 @@
 import { Request, Response } from "express"
 import fs from 'fs';
 import { resolve } from 'path';
-import htmlToPdf from 'html-pdf';
+import pdfKit from 'pdfkit';
 
 import { CashRegisterFilterInterface, CashRegisterInterface } from "../entities/CashRegister";
 import { CashRegisterService } from "../services/CashRegister";
 import { ResponseClientService } from "../services/ResponseClient";
+import { maskDate } from "../util";
 
 const responseClientService = new ResponseClientService();
 const cashRegisterService = new CashRegisterService();
@@ -100,15 +101,21 @@ class CashRegisterController {
                 return res.json(responseHandled);
             }
 
-            const htmlPath = resolve(__dirname, '..', 'views', 'cashRegisterReport.html');
-            const html = fs.readFileSync(htmlPath).toString('utf8');
+            const pdf = new pdfKit();
+            const buffers: Buffer[] = [];
+            
+            pdf.on('data', buffers.push.bind(buffers));
+            pdf.on('end', () => {
+                
+                const pdfData = Buffer.concat(buffers);
+                
+                res.setHeader('Content-disposition', `inline; filename=${maskDate(new Date())}.pdf`);
+                
+                return res.send(pdfData);
+            });
 
-            htmlToPdf.create(html, { type: 'pdf', format: 'A4', orientation: 'portrait' })
-                .toBuffer((err, buffer) => {
-                    if (err) return res.status(500).json(err)
-
-                    return res.end(buffer)
-                });
+            pdf.text('Hello world');
+            pdf.end();
 
         } catch (error) {
             const errorHandled = responseClientService.errorResponse(error);
