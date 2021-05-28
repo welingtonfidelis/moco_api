@@ -1,15 +1,14 @@
 import { Request, Response } from "express"
-import fs from 'fs';
-import { resolve } from 'path';
-import pdfKit from 'pdfkit';
 
 import { CashRegisterFilterInterface, CashRegisterInterface } from "../entities/CashRegister";
 import { CashRegisterService } from "../services/CashRegister";
+import { PdfMakerService } from "../services/PdfMaker";
 import { ResponseClientService } from "../services/ResponseClient";
 import { maskDate } from "../util";
 
 const responseClientService = new ResponseClientService();
 const cashRegisterService = new CashRegisterService();
+const pdfMakerService = new PdfMakerService();
 
 class CashRegisterController {
     async save(req: Request, res: Response) {
@@ -101,21 +100,13 @@ class CashRegisterController {
                 return res.json(responseHandled);
             }
 
-            const pdf = new pdfKit();
-            const buffers: Buffer[] = [];
-            
-            pdf.on('data', buffers.push.bind(buffers));
-            pdf.on('end', () => {
-                
-                const pdfData = Buffer.concat(buffers);
-                
-                res.setHeader('Content-disposition', `inline; filename=${maskDate(new Date())}.pdf`);
-                
-                return res.send(pdfData);
-            });
+            const { total } = await cashRegisterService.reportCashOnHand(ongId);
 
-            pdf.text('Hello world');
-            pdf.end();
+            const pdf = await pdfMakerService.cashRegisterReport(listCashRegisters, total);
+
+            res.setHeader('Content-disposition', `inline; filename=${maskDate(new Date())}.pdf`);
+            
+            return res.send(pdf);
 
         } catch (error) {
             const errorHandled = responseClientService.errorResponse(error);
