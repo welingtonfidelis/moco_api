@@ -1,5 +1,8 @@
 import { Op } from "sequelize";
-import { CashRegisterGroupInterface } from "../entities/CashRegisterGroup";
+import { 
+    CashRegisterGroupInterface, CashRegisterGroupDeleteInterface, 
+    CashRegisterGroupUpdateInterface 
+} from "../entities/CashRegisterGroup";
 import { CashRegisterGroupModel } from "../models/CashRegisterGroup";
 import { CashRegisterGroupFilterInterface } from '../entities/CashRegisterGroup';
 
@@ -63,19 +66,21 @@ class CashRegisterGroupRepository {
         return selectedCashRegisterGroup;
     }
 
-    async update(id: string, ongId: string, data: CashRegisterGroupInterface) {
+    async update(data: CashRegisterGroupUpdateInterface) {
+        const { id, ong_id } = data;
         const updatedCashRegisterGroup = await CashRegisterGroupModel.update(
             data,
             {
-                where: { id, ong_id: ongId}
+                where: { id, ong_id}
             });
 
         return updatedCashRegisterGroup;
     }
 
-    async delete(id: string, ongId: string) {
+    async delete(data: CashRegisterGroupDeleteInterface) {
+        const { id, ong_id } = data;
         const deletedCashRegisterGroup = await CashRegisterGroupModel.destroy({
-            where: { id, ong_id: ongId }
+            where: { id, ong_id }
         });
 
         return deletedCashRegisterGroup;

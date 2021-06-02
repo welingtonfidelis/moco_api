@@ -1,6 +1,11 @@
 import { 
-    CashRegisterGroupCreatedInterface, CashRegisterGroupInterface, 
-    CashRegisterGroupFilterInterface 
+    CashRegisterGroupCreatedInterface, 
+    CashRegisterGroupFilterInterface,
+    CashRegisterGroupUpdateInterface,
+    CashRegisterGroupDeleteInterface,
+    CashRegisterGroupResponseClientInterface,
+    CashRegisterGroupInterface,
+    CashRegisterGroupListInterface
 } from "../entities/CashRegisterGroup";
 import { AppError } from "../errors/AppError";
 import { CashRegisterGroupRepository } from "../repository/CashRegisterGroup";
@@ -8,7 +13,7 @@ import { CashRegisterGroupRepository } from "../repository/CashRegisterGroup";
 const cashRegisterGroupRepository = new CashRegisterGroupRepository();
 
 class CashRegisterGroupService {
-    async save(data: CashRegisterGroupInterface) {
+    async save(data: CashRegisterGroupInterface): Promise<CashRegisterGroupCreatedInterface> {
         const cashRegisterGroupAlreadyExists = await cashRegisterGroupRepository
             .findOneByDescription(data.description, data.ong_id);
 
@@ -26,13 +31,18 @@ class CashRegisterGroupService {
 
     async list(
         page: number, limit: number, ongId: string, filter: CashRegisterGroupFilterInterface
-    ) {
+    ): Promise<CashRegisterGroupResponseClientInterface> {
         const skip = limit * (page - 1);
 
         const listCashRegisterGroups = await cashRegisterGroupRepository
             .list(skip, limit, ongId, filter);
 
-        return listCashRegisterGroups;
+        const listCashRegisterGroupHandled: CashRegisterGroupResponseClientInterface = {
+            count: listCashRegisterGroups.count,
+            rows: listCashRegisterGroups.rows.map(item => item.toListInterface())
+        }
+        
+        return listCashRegisterGroupHandled;
     }
 
     async listSimple(ongId: string) {
@@ -41,29 +51,31 @@ class CashRegisterGroupService {
         return listCashRegisterGroups;
     }
 
-    async show(id: string, ongId: string) {
+    async show(id: string, ongId: string): Promise<CashRegisterGroupListInterface | null> {
         const selectedCashRegisterGroup = await cashRegisterGroupRepository.show(id, ongId);
 
-        return selectedCashRegisterGroup;
+        return selectedCashRegisterGroup 
+            ? selectedCashRegisterGroup.toListInterface() 
+            : null;
     }
 
-    async update(id: string, ongId: string, data: CashRegisterGroupInterface) {
+    async update(data: CashRegisterGroupUpdateInterface): Promise<boolean> {
         const cashRegisterGroupAlreadyExists = await cashRegisterGroupRepository
-            .findOneByDescriptionWithDifferentId(id, data.description, data.ong_id);
+            .findOneByDescriptionWithDifferentId(data.id, data.description, data.ong_id);
 
         if (cashRegisterGroupAlreadyExists) {
             throw new AppError('Description already in use', 400);
         }
 
-        const updatedCashRegisterGroup = await cashRegisterGroupRepository.update(id, ongId, data);
+        const [updatedCashRegisterGroup] = await cashRegisterGroupRepository.update(data);
 
-        return updatedCashRegisterGroup;
+        return updatedCashRegisterGroup > 0;
     }
 
-    async delete(id: string, ongId: string) {
-        const deletedCashRegisterGroup = await cashRegisterGroupRepository.delete(id, ongId);
+    async delete(data: CashRegisterGroupDeleteInterface): Promise<boolean> {
+        const deletedCashRegisterGroup = await cashRegisterGroupRepository.delete(data);
 
-        return deletedCashRegisterGroup;
+        return deletedCashRegisterGroup > 0;
     }
 }
 

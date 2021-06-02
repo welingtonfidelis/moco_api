@@ -1,5 +1,5 @@
 import { randomHash, removeSpecialCharacters } from "../util";
-import { OngCreatedInterface, OngInterface } from "../entities/Ong";
+import { OngCreatedInterface, OngInterface, OngResponseClientInterface } from "../entities/Ong";
 import { UserInterface } from "../entities/User";
 import { OngRepository } from "../repository/Ong";
 import { UserRepository } from "../repository/User";
@@ -9,7 +9,7 @@ const ongRepository = new OngRepository();
 const userRepository = new UserRepository();
 
 class OngService {
-    async save(data: OngInterface) {
+    async save(data: OngInterface): Promise<OngCreatedInterface> {
         data.cnpj = removeSpecialCharacters(data.cnpj);
 
         const ongAlreadyExists = await ongRepository.findOneByEmailOrCnpj(data.email, data.cnpj);
@@ -48,10 +48,15 @@ class OngService {
         return savedOngHandled;
     }
 
-    async list() {
+    async list(): Promise<OngResponseClientInterface> {
         const listOngs = await ongRepository.list();
 
-        return listOngs;
+        const listOngHandled: OngResponseClientInterface = {
+            count: listOngs.count,
+            rows: listOngs.rows.map(item => item.toListInterface())
+        }
+
+        return listOngHandled;
     }
 }
 

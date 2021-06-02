@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import { 
-    CashRegisterGroupInterface, CashRegisterGroupFilterInterface 
+    CashRegisterGroupInterface, CashRegisterGroupFilterInterface, 
+    CashRegisterGroupUpdateInterface, CashRegisterGroupDeleteInterface 
 } from "../entities/CashRegisterGroup";
 import { CashRegisterGroupService } from "../services/CashRegisterGroup";
 import { ResponseClientService } from "../services/ResponseClient";
@@ -85,13 +86,14 @@ class CashRegisterGroupController {
             const { description, observation } = req.body;
             const { id } = req.params;
             const { ongId } = req;
-            const data: CashRegisterGroupInterface = {
+            const data: CashRegisterGroupUpdateInterface = {
+                id,
                 ong_id: ongId,
                 description, 
                 observation
             }
 
-            const updatedCashRegisterGroup = await cashRegisterGroupService.update(id, ongId, data);
+            const updatedCashRegisterGroup = await cashRegisterGroupService.update(data);
             const responseHandled = responseClientService.successResponse(updatedCashRegisterGroup);
 
             return res.json(responseHandled);
@@ -105,8 +107,12 @@ class CashRegisterGroupController {
         try {
             const { id } = req.params;
             const { ongId } = req;
+            const data: CashRegisterGroupDeleteInterface = {
+                id,
+                ong_id: ongId
+            }
 
-            const deletedCashRegisterGroup = await cashRegisterGroupService.delete(id, ongId);
+            const deletedCashRegisterGroup = await cashRegisterGroupService.delete(data);
             const responseHandled = responseClientService.successResponse(deletedCashRegisterGroup);
 
             return res.json(responseHandled);

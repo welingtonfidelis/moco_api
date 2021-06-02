@@ -1,6 +1,6 @@
 import Sequelize, { Association, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, Model } from 'sequelize';
 import { sequelize } from '../database/connection';
-import { CashRegisterInterface } from '../entities/CashRegister';
+import { CashRegisterInterface, CashRegisterListInterface } from '../entities/CashRegister';
 import { CashRegisterGroupModel } from './CashRegisterGroup';
 
 class CashRegisterModel extends Model<CashRegisterInterface> {
@@ -17,6 +17,21 @@ class CashRegisterModel extends Model<CashRegisterInterface> {
   readonly created_at!: Date;
   readonly updated_at!: Date;
   readonly cash_register_group!: CashRegisterGroupModel;
+
+  toListInterface(): CashRegisterListInterface {
+    return {
+      id: this.id,
+      description: this.description,
+      observation: this.observation,
+      value: this.value,
+      paid_in: this.paid_in,
+      type: this.type,
+      user_id: this.user_id,
+      cash_register_group: this.cash_register_group,
+      created_at: this.created_at,
+      updated_at: this.updated_at,
+    }
+  }
 }
 
 CashRegisterModel.init(

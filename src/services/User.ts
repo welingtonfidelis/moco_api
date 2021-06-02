@@ -3,9 +3,8 @@ import { AppError } from "../errors/AppError";
 import { UserRepository } from "../repository/User";
 
 const userRepository = new UserRepository();
-
 class UserService {
-    async save(data: UserInterface) {
+    async save(data: UserInterface): Promise<UserCreatedInterface> {
         const userAlreadyExists = await userRepository.findOneByUserOrEmail(data.user, data.email);
 
         if(userAlreadyExists) {
