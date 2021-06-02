@@ -3,7 +3,7 @@ import { CashRegisterReportList } from '../entities/CashRegister';
 import { maskDate, maskValue } from '../util';
 
 class PdfMakerService {
-    cashRegisterReport = (report: CashRegisterReportList, cashOnHand: number) => {
+    cashRegisterReport = (report: CashRegisterReportList, cashOnHand: number): Promise<Buffer> => {
         return new Promise((resolve, reject) => {
             const pdf = new pdfKit();
             const buffers: Buffer[] = [];

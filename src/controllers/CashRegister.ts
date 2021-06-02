@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 
-import { CashRegisterFilterInterface, CashRegisterInterface } from "../entities/CashRegister";
+import { CashRegisterDeleteInterface, CashRegisterFilterInterface, CashRegisterInterface, CashRegisterUpdateInterface } from "../entities/CashRegister";
 import { CashRegisterService } from "../services/CashRegister";
 import { PdfMakerService } from "../services/PdfMaker";
 import { ResponseClientService } from "../services/ResponseClient";
@@ -135,10 +135,10 @@ class CashRegisterController {
                 description, observation, paid_in, value, type, cash_register_group_id
             } = req.body;
             const { id } = req.params;
-            const { userId, ongId } = req;
-            const data: CashRegisterInterface = {
+            const { ongId } = req;
+            const data: CashRegisterUpdateInterface = {
+                id,
                 ong_id: ongId,
-                user_id: userId,
                 description,
                 observation,
                 paid_in,
@@ -147,7 +147,7 @@ class CashRegisterController {
                 cash_register_group_id
             }
 
-            const updatedCashRegister = await cashRegisterService.update(id, ongId, data);
+            const updatedCashRegister = await cashRegisterService.update(data);
             const responseHandled = responseClientService.successResponse(updatedCashRegister);
 
             return res.json(responseHandled);
@@ -161,8 +161,12 @@ class CashRegisterController {
         try {
             const { id } = req.params;
             const { ongId } = req;
+            const data: CashRegisterDeleteInterface = {
+                id,
+                ong_id: ongId
+            }
 
-            const deletedCashRegister = await cashRegisterService.delete(id, ongId);
+            const deletedCashRegister = await cashRegisterService.delete(data);
             const responseHandled = responseClientService.successResponse(deletedCashRegister);
 
             return res.json(responseHandled);

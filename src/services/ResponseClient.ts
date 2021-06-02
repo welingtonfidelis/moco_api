@@ -1,7 +1,7 @@
 import { AppError } from "../errors/AppError";
 
 class ResponseClientService {
-  errorResponse(error: Error) {
+  errorResponse(error: Error): ResponseClientInterface {
     if (error instanceof AppError) {
       const code = (error.code >= 100 && error.code <= 511) ? error.code : 500;
       const message = error.message || 'Internal server error.';
@@ -20,7 +20,7 @@ class ResponseClientService {
     };
   }
 
-  successResponse(data: any, code = 200, message = 'Success') {
+  successResponse(data: any, code = 200, message = 'Success'): ResponseClientInterface {
     const statusCode = (code >= 100 && code <= 511) ? code : 200;
 
     return {

@@ -1,6 +1,6 @@
 import Sequelize, { Model } from 'sequelize';
 import { sequelize } from '../database/connection';
-import { CashRegisterGroupInterface } from '../entities/CashRegisterGroup';
+import { CashRegisterGroupInterface, CashRegisterGroupListInterface } from '../entities/CashRegisterGroup';
 import { CashRegisterModel } from './CashRegister';
 
 class CashRegisterGroupModel extends Model<CashRegisterGroupInterface> {
@@ -9,9 +9,18 @@ class CashRegisterGroupModel extends Model<CashRegisterGroupInterface> {
   observation!: string;
   ong_id!: string;
 
-  // timestamps!
   readonly created_at!: Date;
   readonly updated_at!: Date;
+
+  toListInterface(): CashRegisterGroupListInterface {
+    return {
+      id: this.id,
+      description: this.description,
+      observation: this.observation,
+      created_at: this.created_at,
+      updated_at: this.updated_at
+    }
+  }
 }
 
 CashRegisterGroupModel.init(

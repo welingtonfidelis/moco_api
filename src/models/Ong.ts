@@ -1,6 +1,6 @@
 import Sequelize, { Association, HasMany, Model } from 'sequelize';
 import { sequelize } from '../database/connection';
-import { OngInterface } from '../entities/Ong';
+import { OngInterface, OngListInterface } from '../entities/Ong';
 import { UserModel } from './User';
 
 
@@ -26,6 +26,22 @@ class OngModel extends Model<OngInterface> {
   static associations: {
     users: Association<OngModel, UserModel>;
   };
+
+  toListInterface(): OngListInterface {
+    return {
+      id: this.id,
+      name: this.name,
+      cnpj: this.cnpj,
+      email: this.email,
+      logo: this.logo,
+      municipal_law: this.municipal_law,
+      state_law: this.state_law,
+      social_1: this.social_1,
+      social_2: this.social_2,
+      created_at: this.created_at,
+      updated_at: this.updated_at
+    }
+  }
 }
 
 OngModel.init(

@@ -1,5 +1,5 @@
 import { Op, QueryTypes } from "sequelize";
-import { CashRegisterFilterInterface, CashRegisterInterface } from "../entities/CashRegister";
+import { CashOnHandReport, CashRegisterDeleteInterface, CashRegisterFilterInterface, CashRegisterInterface, CashRegisterUpdateInterface } from "../entities/CashRegister";
 import { CashRegisterModel } from "../models/CashRegister";
 import { CashRegisterGroupModel } from "../models/CashRegisterGroup";
 
@@ -76,7 +76,11 @@ class CashRegisterRepository {
             }
         );
 
-        const resultQueryHandled = resultQuery && resultQuery.total ? resultQuery : { total: '0' }
+        const resultQueryHandled: CashOnHandReport = { 
+            total: resultQuery && resultQuery.total 
+                ? parseFloat(resultQuery.total) 
+                : 0
+        }
 
         return resultQueryHandled;
     }
@@ -131,19 +135,21 @@ class CashRegisterRepository {
         return selectedCashRegister;
     }
 
-    async update(id: string, ongId: string, data: CashRegisterInterface) {
+    async update(data: CashRegisterUpdateInterface) {
+        const { id, ong_id } = data;
         const updatedCashRegister = await CashRegisterModel.update(
             data,
             {
-                where: { id, ong_id: ongId }
+                where: { id, ong_id }
             });
 
         return updatedCashRegister;
     }
 
-    async delete(id: string, ongId: string) {
+    async delete(data: CashRegisterDeleteInterface) {
+        const { id, ong_id } = data;
         const deletedCashRegister = await CashRegisterModel.destroy({
-            where: { id, ong_id: ongId }
+            where: { id, ong_id }
         });
 
         return deletedCashRegister;

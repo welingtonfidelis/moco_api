@@ -8,7 +8,7 @@ import { UserRepository } from '../repository/User';
 const userRepository = new UserRepository();
 
 class AuthService {
-    async login(user: string, password: string) {
+    async login(user: string, password: string): Promise<UserLoginInterface> {
         const jwtSecret: string = process.env.SECRET!;
         const selectedUser = await userRepository.findOneByUserOrEmail(user);
 
