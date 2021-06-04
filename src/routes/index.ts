@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authMidleware } from "../middlewares/Auth";
-import { authRouter } from "./auth";
+import { noAuthRouter } from "./noAuth";
 import { cashRegisterRouter } from "./cashRegister";
 import { cashRegisterGroupRouter } from "./cashRegisterGroup";
 import { ongRouter } from "./ong";
@@ -8,7 +8,7 @@ import { userRouter } from "./user";
 
 const router = Router();
 
-router.use(authRouter);
+router.use(noAuthRouter);
 
 router.use(authMidleware);
 
