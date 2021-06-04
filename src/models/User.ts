@@ -1,6 +1,6 @@
 import Sequelize, { Model } from 'sequelize';
 import { sequelize } from '../database/connection';
-import { UserInterface, UserListInterface } from '../entities/User';
+import { UserInterface, UserListInterface, UserProfileInterface } from '../entities/User';
 import { OngModel } from './Ong';
 
 class UserModel extends Model<UserInterface> {
@@ -17,6 +17,7 @@ class UserModel extends Model<UserInterface> {
   // timestamps!
   readonly created_at!: Date;
   readonly updated_at!: Date;
+  readonly ong!: OngModel;
 
   toListInterface(): UserListInterface {
     return {
@@ -29,6 +30,17 @@ class UserModel extends Model<UserInterface> {
       address: this.address,
       created_at: this.created_at,
       updated_at: this.updated_at,
+    }
+  }
+
+  toProfileInterface(): UserProfileInterface {
+    return {
+      name: this.name,
+      email: this.email,
+      address: this.address,
+      birth: this.birth,
+      phone: this.phone,
+      ong_name: this.ong.name
     }
   }
 }
