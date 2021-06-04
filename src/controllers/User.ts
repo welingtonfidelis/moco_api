@@ -23,20 +23,6 @@ class UserController {
         }
     }
 
-    async resetPassword(req: Request, res: Response) {
-        try {
-            const { email } = req.body;
-            
-            const savedUser = await userService.resetPassword(email);
-            const responseHandled = responseClientService.successResponse(savedUser);
-
-            return res.json(responseHandled);
-        } catch (error) {
-            const errorHandled = responseClientService.errorResponse(error);
-            return res.status(errorHandled.status_code).json(errorHandled);
-        }
-    }
-
     async showProfile(req: Request, res: Response) {
         try {
             const { userId, ongId } = req;
