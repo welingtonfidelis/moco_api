@@ -1,3 +1,5 @@
+import { OngListInterface } from "./Ong";
+
 export interface UserInterface {
     id?: string;
     name: string;
@@ -43,6 +45,30 @@ export interface UserUpdateInterface {
     birth: Date;
     address: string;
     ong_id: string;
+}
+
+export interface UserUpdateProfileInterface {
+    id: string;
+    name: string;
+    phone: string;
+    birth: Date;
+    address: string;
+    ong_id: string;
+}
+
+export interface UserProfileInterface {
+    name: string;
+    email: string;
+    phone: string;
+    birth: Date;
+    address: string;
+    ong_name: string;
+}
+
+export interface UserUpdatePasswordInterface {
+    id: string;
+    ong_id: string;
+    password: string;
 }
 
 export interface UserDeleteInterface {

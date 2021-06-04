@@ -6,10 +6,10 @@ import { TokenInterface } from '../entities/Token';
 import { UserRepository } from '../repository/User';
 
 const userRepository = new UserRepository();
+const JWTSECRET: string = process.env.SECRET!;
 
 class AuthService {
     async login(user: string, password: string): Promise<UserLoginInterface> {
-        const jwtSecret: string = process.env.SECRET!;
         const selectedUser = await userRepository.findOneByUserOrEmail(user);
 
         if (!selectedUser) {
@@ -31,8 +31,7 @@ class AuthService {
         const contentToken: TokenInterface = {
             userId: selectedUser.id, ongId: selectedUser.ong_id
         }
-        const token = jwt.sign(contentToken, jwtSecret, { expiresIn: '10h' });
-
+        const token = this.createToken(contentToken, 10*60);
 
         const logedUser: UserLoginInterface = {
             name: selectedUser.name,
@@ -41,6 +40,10 @@ class AuthService {
         }
 
         return logedUser;
+    }
+
+    createToken(content: any, expiresMinutes: number) {
+        return jwt.sign(content, JWTSECRET, { expiresIn: `${expiresMinutes}m` });
     }
 }
 

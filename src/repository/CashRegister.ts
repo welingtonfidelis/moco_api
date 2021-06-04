@@ -141,7 +141,8 @@ class CashRegisterRepository {
             data,
             {
                 where: { id, ong_id }
-            });
+            }
+        );
 
         return updatedCashRegister;
     }
