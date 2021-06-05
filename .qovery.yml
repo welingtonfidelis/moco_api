@@ -1,0 +1,15 @@
+---
+application:
+  name: "moco-api"
+  project: "moco-api"
+  organization: "QoveryCommunity"
+databases:
+- type: "POSTGRESQL"
+  name: "moco"
+  version: "11"
+routers:
+- name: "main-moco-api"
+  routes:
+  - application_name: "moco-api"
+    paths:
+    - "/*"
