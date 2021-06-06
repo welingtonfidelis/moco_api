@@ -8,8 +8,9 @@
   },
   "scripts": {
     "start": "node dist/server.js",
-    "postinstall": "tsc",
-    "deploy": "git add . && git commit -m Heroku && git push heroku main",
+    "clean": "rimraf dist/",
+    "copy-files": "copyfiles -u 1 src/**/*.hbs dist/",
+    "build": "yarn clean && tsc && yarn copy-files",
     "dev": "ts-node-dev --respawn --transpile-only --ignore-watch node_modules src/server.ts",
     "migrate:generate": "sequelize-cli migration:generate --name",
     "migrate:apply": "sequelize-cli db:migrate",
@@ -26,6 +27,8 @@
     "@types/node": "^15.0.2",
     "@types/pdfkit": "^0.11.0",
     "@types/validator": "^13.1.3",
+    "copyfiles": "^2.4.1",
+    "rimraf": "^3.0.2",
     "ts-node-dev": "^1.1.6"
   },
   "dependencies": {
