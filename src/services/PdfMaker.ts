@@ -1,9 +1,19 @@
 import pdfKit from 'pdfkit';
-import { CashRegisterReportList } from '../entities/CashRegister';
-import { maskDate, maskValue } from '../util';
+import htmlToPdf from 'html-pdf';
+import fs from 'fs';
+import { resolve } from 'path';
+import handlebars from 'handlebars';
 
+import { CashRegisterFilterInterface } from '../entities/CashRegister';
+import { maskDate, maskValue } from '../util';
+import { CashRegisterService } from './CashRegister';
+
+const cashRegisterService = new CashRegisterService();
 class PdfMakerService {
-    cashRegisterReport = (report: CashRegisterReportList, cashOnHand: number): Promise<Buffer> => {
+    async cashRegisterReport(ongId: string, filter: CashRegisterFilterInterface): Promise<Buffer> {
+        const report = await cashRegisterService.reportList(ongId, filter);
+        const { total: cashOnHand } = await cashRegisterService.reportCashOnHand(ongId);
+
         return new Promise((resolve, reject) => {
             const pdf = new pdfKit();
             const buffers: Buffer[] = [];
@@ -18,8 +28,8 @@ class PdfMakerService {
             pdf
                 .fontSize(17)
                 .text(
-                    `Relatório - De `+
-                    `${maskDate(new Date(report.date_start))} até `+
+                    `Relatório - De ` +
+                    `${maskDate(new Date(report.date_start))} até ` +
                     `${maskDate(new Date(report.date_end))}`,
                     20, 18
                 );
@@ -126,6 +136,41 @@ class PdfMakerService {
 
             pdf.end();
         });
+    }
+
+    async cashRegisterReportByHtml(ongId: string, filter: CashRegisterFilterInterface): Promise<Buffer> {
+        const report = await cashRegisterService.reportList(ongId, filter);
+        const { total: cashOnHand } = await cashRegisterService.reportCashOnHand(ongId);
+
+        const htmlTemplatePath = resolve(__dirname, '..', 'views', 'html', 'cashRegisterReport.hbs');
+        const htmlTemplate = fs.readFileSync(htmlTemplatePath).toString('utf8');
+        const html = handlebars.compile(htmlTemplate)({
+            cashOnHand: maskValue(cashOnHand),
+            dateStart: maskDate(new Date(report.date_start)),
+            dateEnd: maskDate(new Date(report.date_end)),
+            today: maskDate(new Date()),
+            revenue: maskValue(report.revenue),
+            expense: maskValue(report.expense),
+            profit: maskValue(report.profit),
+            reportList: report.rows.map(item => {
+                return {
+                    type: item.type === 'in' ? 'Entrada' : 'Saída',
+                    value: maskValue(item.value),
+                    paid_in: maskDate(item.paid_in),
+                    description: item.description,
+                    cash_register_group_description: item.cash_register_group_description
+                }
+            })
+        });
+
+        return new Promise((resolve, reject) => {
+            htmlToPdf.create(html, { type: 'pdf', format: 'A4', orientation: 'portrait' })
+                .toBuffer((err, buffer) => {
+                    if (err) reject(err);
+
+                    resolve(buffer)
+                });
+        })
     }
 }
 
