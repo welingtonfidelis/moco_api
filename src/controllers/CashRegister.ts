@@ -6,6 +6,11 @@ import { PdfMakerService } from "../services/PdfMaker";
 import { ResponseClientService } from "../services/ResponseClient";
 import { maskDate } from "../util";
 
+import htmlToPdf from 'html-pdf';
+import fs from 'fs';
+import { resolve } from 'path';
+import handlebars from 'handlebars';
+
 const responseClientService = new ResponseClientService();
 const cashRegisterService = new CashRegisterService();
 const pdfMakerService = new PdfMakerService();
@@ -105,8 +110,32 @@ class CashRegisterController {
             const pdf = await pdfMakerService.cashRegisterReport(listCashRegisters, total);
 
             res.setHeader('Content-disposition', `inline; filename=${maskDate(new Date())}.pdf`);
-            
+
             return res.send(pdf);
+
+        } catch (error) {
+            const errorHandled = responseClientService.errorResponse(error);
+            return res.status(errorHandled.status_code).json(errorHandled);
+        }
+    }
+
+    async reportListV2(req: Request, res: Response) {
+        try {
+            const htmlTemplatePath = resolve(__dirname, '..', 'views', 'html', 'resetPassword.hbs');
+            const htmlTemplate = fs.readFileSync(htmlTemplatePath).toString('utf8');
+            const html = handlebars.compile(htmlTemplate)({
+                userName: 'Testinho',
+                resetLink: 'http://localhost/teste.html'
+            });
+
+            htmlToPdf.create(html, { type: 'pdf', format: 'A4', orientation: 'portrait' })
+                .toBuffer((err, buffer) => {
+                    if (err) return res.status(500).json(err)
+
+                    res.setHeader('Content-disposition', `inline; filename=${maskDate(new Date())}.pdf`);
+
+                    return res.end(buffer)
+                });
 
         } catch (error) {
             const errorHandled = responseClientService.errorResponse(error);

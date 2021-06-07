@@ -33,6 +33,10 @@ cashRegisterRouter.get(
     cashRegisterController.reportList
 );
 cashRegisterRouter.get(
+    '/cash-registers/report/v2',
+    cashRegisterController.reportListV2
+);
+cashRegisterRouter.get(
     '/cash-registers/:id', 
     inputValidateMidleware(cashRegisterShowSchema),
     cashRegisterController.show
