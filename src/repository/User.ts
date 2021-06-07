@@ -14,6 +14,16 @@ class UserRepository {
         return savedUser;
     }
 
+    async show(id: string, ong_id: string) {
+        const selectedUser = await UserModel.findOne({
+            where: {
+                id, ong_id
+            }
+        });
+
+        return selectedUser;
+    }
+
     async findOneByUserOrEmail(user: string, email = user) {
         const selectedUser = await UserModel.findOne({
             where: {
@@ -65,7 +75,7 @@ class UserRepository {
 
     async updatePassword(data: UserUpdatePasswordInterface) {
         const { id, ong_id } = data;
-        const password = bcrypt.hashSync(data.password, saltRounds);
+        const password = bcrypt.hashSync(data.new_password, saltRounds);
 
         const updatedUser = await UserModel.update(
             {

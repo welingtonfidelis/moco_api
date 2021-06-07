@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { resolve } from 'path';
 import handlebars from 'handlebars';
+import bcrypt from 'bcryptjs';
 
 import { UserCreatedInterface, UserInterface, UserProfileInterface, UserUpdatePasswordInterface, UserUpdateProfileInterface } from "../entities/User";
 import { AppError } from "../errors/AppError";
@@ -17,10 +18,10 @@ class UserService {
     async save(data: UserInterface): Promise<UserCreatedInterface> {
         const userAlreadyExists = await userRepository.findOneByUserOrEmail(data.user, data.email);
 
-        if(userAlreadyExists) {
+        if (userAlreadyExists) {
             let message = 'User already in use';
 
-            if(userAlreadyExists.email === data.email) message = 'Email already in use';
+            if (userAlreadyExists.email === data.email) message = 'Email already in use';
 
             throw new AppError(message, 400);
         }
@@ -29,14 +30,14 @@ class UserService {
         const savedUserHandled: UserCreatedInterface = {
             id: savedUser.id
         }
-        
+
         return savedUserHandled;
     }
 
     async resetPassword(email: string): Promise<void> {
         const user = await userRepository.findOneByUserOrEmail(email);
 
-        if(!user) {
+        if (!user) {
             throw new AppError(
                 'User not found',
                 400
@@ -44,7 +45,7 @@ class UserService {
         }
 
         const token = authService.createToken(
-            { userId: user.id, ongId: user.ong_id }, 
+            { userId: user.id, ongId: user.ong_id },
             15
         );
 
@@ -68,7 +69,7 @@ class UserService {
     async showProfile(id: string, ongId: string): Promise<UserProfileInterface | null> {
         const selectedUser = await userRepository.showProfile(id, ongId);
 
-        return selectedUser 
+        return selectedUser
             ? selectedUser.toProfileInterface()
             : null;
     }
@@ -79,7 +80,26 @@ class UserService {
         return updatedUser > 0;
     }
 
+    async updateResetedPassword(data: UserUpdatePasswordInterface): Promise<boolean> {
+        const [updatedUser] = await userRepository.updatePassword(data);
+
+        return updatedUser > 0;
+    }
+
     async updatePassword(data: UserUpdatePasswordInterface): Promise<boolean> {
+        const selectedUser = await userRepository.show(data.id, data.ong_id);
+
+        if (!selectedUser) return false;
+
+        const isValid = bcrypt.compareSync(data.old_password!, selectedUser.password);
+
+        if (!isValid) {
+            throw new AppError(
+                'Invalid old password',
+                401
+            );
+        }
+
         const [updatedUser] = await userRepository.updatePassword(data);
 
         return updatedUser > 0;

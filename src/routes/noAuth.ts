@@ -4,7 +4,7 @@ import { MailController } from "../controllers/Mail";
 import { inputValidateMidleware } from "../middlewares/InputValidate";
 import { contactMailSchema } from "../middlewares/InputValidate/schemas/mail/contact";
 import { userLoginSchema } from "../middlewares/InputValidate/schemas/user/login";
-import { userResetPasswordSchema } from "../middlewares/InputValidate/schemas/mail/resetUserPassword";
+import { userResetPasswordSchema } from "../middlewares/InputValidate/schemas/user/resetUserPassword";
 
 const noAuthRouter = Router();
 const authController = new AuthController();

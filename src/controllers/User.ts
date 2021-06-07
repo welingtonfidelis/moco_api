@@ -60,14 +60,35 @@ class UserController {
         }
     }
 
-    async updatePassword(req: Request, res: Response) {
+    async updateResetedPassword(req: Request, res: Response) {
         try {
-            const { password } = req.body;
+            const { new_password } = req.body;
             const { userId, ongId } = req;
             const data: UserUpdatePasswordInterface = {
                 id: userId,
                 ong_id: ongId,
-                password
+                new_password
+            }
+            
+            const updatedUser = await userService.updateResetedPassword(data);
+            const responseHandled = responseClientService.successResponse(updatedUser);
+
+            return res.json(responseHandled);
+        } catch (error) {
+            const errorHandled = responseClientService.errorResponse(error);
+            return res.status(errorHandled.status_code).json(errorHandled);
+        }
+    }
+
+    async updatePassword(req: Request, res: Response) {
+        try {
+            const { old_password, new_password } = req.body;
+            const { userId, ongId } = req;
+            const data: UserUpdatePasswordInterface = {
+                id: userId,
+                ong_id: ongId,
+                new_password,
+                old_password
             }
             
             const updatedUser = await userService.updatePassword(data);

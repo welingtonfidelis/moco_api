@@ -58,6 +58,7 @@ export interface UserUpdateProfileInterface {
 
 export interface UserProfileInterface {
     name: string;
+    user: string;
     email: string;
     phone: string;
     birth: Date;
@@ -68,7 +69,8 @@ export interface UserProfileInterface {
 export interface UserUpdatePasswordInterface {
     id: string;
     ong_id: string;
-    password: string;
+    old_password?: string;
+    new_password: string;
 }
 
 export interface UserDeleteInterface {

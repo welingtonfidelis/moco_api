@@ -40,7 +40,8 @@ class UserModel extends Model<UserInterface> {
       address: this.address,
       birth: this.birth,
       phone: this.phone,
-      ong_name: this.ong.name
+      ong_name: this.ong.name,
+      user: this.user
     }
   }
 }
