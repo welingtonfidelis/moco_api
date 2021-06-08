@@ -3,6 +3,7 @@ import { SendMailInterface } from "../entities/Mail";
 import { MailService } from "../services/Mail";
 import { ResponseClientService } from "../services/ResponseClient";
 import { UserService } from "../services/User";
+import { removeHtmlFromText } from "../util";
 
 const responseClientService = new ResponseClientService();
 const userService = new UserService();
@@ -27,13 +28,13 @@ class MailController {
 
     async fisrtContact(req: Request, res: Response) {
         try {
-            const { from, message } = req.body;
+            const { name, email, message } = req.body;
 
             const data: SendMailInterface = {
                 to: CONTACT_MAIL,
-                from,
-                subject: 'MOCO - Primeiro Contato',
-                message
+                from: email,
+                subject: `MOCO - Primeiro Contato de ${name}`,
+                message: removeHtmlFromText(message)
             }
 
             await mailService.sendOneMail(data);

@@ -24,3 +24,7 @@ export const maskValue = (value: number) => {
 export const maskDate = (date: Date) => {
     return new Intl.DateTimeFormat('pt-BR').format(date);
 }
+
+export const removeHtmlFromText = (text: string) => {
+    return text.replace(/<\/?[^>]+(>|$)/g, "");
+}
