@@ -4,8 +4,8 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert({ tableName: 'ongs' },
       [{
-        name: 'Testes',
-        email: 'testes@email.com',
+        name: 'Master',
+        email: 'master@email.com',
         social_1: null,
         social_2: null,
         logo: 'logo.png',

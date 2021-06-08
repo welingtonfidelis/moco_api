@@ -9,18 +9,18 @@ module.exports = {
 
     if (!selectedOng || !selectedOng[0]) return;
 
-    return queryInterface.bulkInsert({ tableName: 'users' },
-      [{
-        name: 'Administrator',
-        email: 'admmaster@email.com',
-        user: 'admmaster',
-        birth: '1990-07-28 00:00:00',
-        password: bcrypt.hashSync(process.env.STARTER_USER_PASSWORD || '1234', 10),
+    const values = [];
+
+    for(let i = 0; i < 2; i += 1) {
+      values.push({
+        description: `Group ${i+1}`,
         ong_id: selectedOng[0].id,
         created_at: new Date(),
         updated_at: new Date()
-      }]
-    );
+      });
+    }
+
+    return queryInterface.bulkInsert({ tableName: 'cash_register_groups' }, values);
   },
 
   down: (queryInterface, Sequelize) => {
