@@ -13,7 +13,7 @@ module.exports = {
 
     for(let i = 0; i < 2; i += 1) {
       values.push({
-        description: `Group ${i+1}`,
+        description: `Grupo ${i+1}`,
         ong_id: selectedOng[0].id,
         created_at: new Date(),
         updated_at: new Date()
