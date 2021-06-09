@@ -1,4 +1,4 @@
-import Sequelize, { Model } from 'sequelize';
+import Sequelize, { ENUM, Model } from 'sequelize';
 import { sequelize } from '../database/connection';
 import { UserInterface, UserListInterface, UserProfileInterface } from '../entities/User';
 import { OngModel } from './Ong';
@@ -13,6 +13,7 @@ class UserModel extends Model<UserInterface> {
   password!: string;
   address!: string;
   ong_id!: string;
+  role!: string;
 
   // timestamps!
   readonly created_at!: Date;
@@ -86,6 +87,9 @@ UserModel.init(
       type: Sequelize.UUID,
       allowNull: false,
     },
+    role: {
+      type: Sequelize.ENUM('user', 'manager', 'admin'),
+    }
   },
   {
     sequelize,

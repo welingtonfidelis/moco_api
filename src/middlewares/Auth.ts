@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { TokenInterface } from '../entities/Token';
+import { ROLES_ENUM } from '../enums/role';
 import { ResponseClientService } from '../services/ResponseClient';
 
 const responseClientService = new ResponseClientService();
 
-const authMidleware = (req: Request, res: Response, next: NextFunction) => {
+const authValidateMidleware = (req: Request, res: Response, next: NextFunction) => {
     const jwtSecret = process.env.SECRET!;
     const { authorization } = req.headers;
 
@@ -36,10 +37,56 @@ const authMidleware = (req: Request, res: Response, next: NextFunction) => {
     }
 
     Object.assign(req, verifiedToken as TokenInterface);
-
+    
     return next();
 }
 
+const roleValidateMidleware = (acceptableRole: ROLES_ENUM) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        const { userRole } = req;
+        let isValid = false;
+
+        switch(acceptableRole) {
+            case 'admin': {
+                isValid = (userRole === ROLES_ENUM.ADMIN);
+
+                break;    
+            }
+            case 'manager': {
+                isValid = (
+                    userRole === ROLES_ENUM.ADMIN 
+                    || userRole === ROLES_ENUM.MANAGER
+                );
+
+                break;
+            }
+            case 'user': {
+                isValid = (
+                    userRole === ROLES_ENUM.ADMIN 
+                    || userRole === ROLES_ENUM.MANAGER
+                    || userRole === ROLES_ENUM.USER
+                );
+
+                break
+            }
+            default: {
+                break;
+            }
+        }
+
+        if(isValid) return next();
+
+        const errorHandled = responseClientService.successResponse(
+            {},
+            401,
+            'Invalid Role'
+        );
+
+        return res.status(401).json(errorHandled);
+    }
+}
+
 export {
-    authMidleware
+    authValidateMidleware,
+    roleValidateMidleware
 }

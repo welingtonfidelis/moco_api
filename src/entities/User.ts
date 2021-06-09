@@ -1,5 +1,3 @@
-import { OngListInterface } from "./Ong";
-
 export interface UserInterface {
     id?: string;
     name: string;
@@ -10,13 +8,12 @@ export interface UserInterface {
     password: string;
     address?: string;
     ong_id: string;
+    role?:string;
     created_at?: Date;
     updated_at?: Date;
 }
 
 export interface UserLoginInterface {
-    name: string;
-    email: string;
     token: string
 }
 
@@ -34,6 +31,9 @@ export interface UserListInterface {
 
 export interface UserCreatedInterface {
     id: string;
+    user: string;
+    email: string;
+    password: string;
 }
 
 export interface UserUpdateInterface {

@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { UserController } from "../controllers/User";
+import { ROLES_ENUM } from "../enums/role";
+import { roleValidateMidleware } from "../middlewares/Auth";
 import { inputValidateMidleware } from "../middlewares/InputValidate";
 import { userSaveSchema } from "../middlewares/InputValidate/schemas/user/save";
 import { userShowProfileSchema } from "../middlewares/InputValidate/schemas/user/showProfile";
@@ -12,7 +14,10 @@ const userController = new UserController();
 
 userRouter.post(
     '/users', 
-    inputValidateMidleware(userSaveSchema),
+    [
+        inputValidateMidleware(userSaveSchema),
+        roleValidateMidleware(ROLES_ENUM.MANAGER)
+    ],
     userController.save
 );
 

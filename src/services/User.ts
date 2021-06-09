@@ -8,7 +8,7 @@ import { AppError } from "../errors/AppError";
 import { UserRepository } from "../repository/User";
 import { AuthService } from "./Auth";
 import { MailService } from "./Mail";
-import { UserModel } from '../models/User';
+import { randomHash } from '../util';
 
 const userRepository = new UserRepository();
 const authService = new AuthService();
@@ -26,9 +26,14 @@ class UserService {
             throw new AppError(message, 400);
         }
 
+        const password = randomHash(8);
+        data.password = password;
         const savedUser = await userRepository.save(data);
         const savedUserHandled: UserCreatedInterface = {
-            id: savedUser.id
+            id: savedUser.id,
+            user: data.user,
+            email: data.email,
+            password: password
         }
 
         return savedUserHandled;

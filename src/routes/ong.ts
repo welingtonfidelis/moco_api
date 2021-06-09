@@ -13,7 +13,7 @@ ongRouter.post(
     ongController.save,
 );
 ongRouter.get(
-    '/ongs', 
+    '/ongs',
     inputValidateMidleware(ongListSchema),
     ongController.list,
 );

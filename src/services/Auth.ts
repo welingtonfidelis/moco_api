@@ -29,13 +29,11 @@ class AuthService {
         }
 
         const contentToken: TokenInterface = {
-            userId: selectedUser.id, ongId: selectedUser.ong_id
+            userId: selectedUser.id, ongId: selectedUser.ong_id, userRole: selectedUser.role
         }
         const token = this.createToken(contentToken, 10*60);
 
         const logedUser: UserLoginInterface = {
-            name: selectedUser.name,
-            email: selectedUser.email,
             token
         }
 

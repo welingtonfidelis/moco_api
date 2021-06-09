@@ -6,7 +6,6 @@ const userSaveSchema = Joi.object({
     phone: Joi.string().allow('').allow(null),
     user: Joi.string().required(),
     birth: Joi.date().required(),
-    password: Joi.string().required(),
     address: Joi.string().allow('').allow(null),
 });
 
