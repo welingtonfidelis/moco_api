@@ -43,8 +43,7 @@ class PdfMakerService {
 
             pdf.text(
                 `Receitas: ${maskValue(report.revenue)} ` +
-                `Despesas: ${maskValue(report.expense)} ` +
-                `Lucro: ${maskValue(report.profit)}`,
+                `Despesas: ${maskValue(report.expense)} `
             );
 
             pdf.text(
@@ -151,7 +150,6 @@ class PdfMakerService {
             today: maskDate(new Date()),
             revenue: maskValue(report.revenue),
             expense: maskValue(report.expense),
-            profit: maskValue(report.profit),
             reportList: report.rows.map(item => {
                 return {
                     type: item.type === 'in' ? 'Entrada' : 'Saída',
