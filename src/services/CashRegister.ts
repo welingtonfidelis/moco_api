@@ -57,14 +57,11 @@ class CashRegisterService {
             date_end: filter.date_end,
             revenue: 0,
             expense: 0,
-            profit: 0,
             rows: [],
         }
 
         listCashRegistersHandled.rows = listCashRegisters.rows.map(item => {
-            listCashRegistersHandled.revenue += item.value;
-
-            if (item.type === 'in') listCashRegistersHandled.profit += item.value;
+            if (item.type === 'in') listCashRegistersHandled.revenue += item.value;
             else listCashRegistersHandled.expense += item.value;
 
             const reportItem: CashRegisterReportItem = {

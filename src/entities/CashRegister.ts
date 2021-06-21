@@ -69,7 +69,6 @@ export interface CashRegisterReportList {
     date_end: string;
     revenue: number;
     expense: number;
-    profit: number;
     count: number;
     rows: CashRegisterReportItem[]
 }
