@@ -1,4 +1,4 @@
-# Lib_quality
+# MOCO
 Este é o backend ([front] aqui) de um projeto que tem o objetivo de atender necessidades no controle de caixa, como cadastrar, listar e gerar relatório sobre movimentação em períodos específicos. Esta API foi construída em [Node.js] com uso de [TypeScript] e [Postgres] (através do ORM [Sequelize]).
 
 ## Arquitetura
