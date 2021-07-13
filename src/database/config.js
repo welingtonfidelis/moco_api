@@ -1,4 +1,8 @@
-require('dotenv').config();
+const { resolve } = require('path');
+const dotenv = require('dotenv');
+
+const enviromentPath = resolve(__dirname, '..', 'enviroments', '.env');
+dotenv.config({ path: enviromentPath });
 
 module.exports = {
   "development": {
